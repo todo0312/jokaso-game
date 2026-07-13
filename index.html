@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#07151b">
+<title>浄化槽探検 CB-5 — 汚れの旅</title>
+<style>
+:root{--bg:#061117;--panel:#0b2029e8;--ink:#eefaff;--muted:#9eb6bf;--line:#31505c;--cyan:#56d7e8;--green:#76c68a;--yellow:#ffd66e;--purple:#bf8bff;--danger:#ff7171}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}button{font:inherit;color:inherit}#game{position:fixed;inset:0;background:#02080b}canvas{display:block;width:100%;height:100%;touch-action:none}.hidden{display:none!important}
+#hud{position:fixed;inset:0;pointer-events:none;z-index:8}.topbar{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 8px) 10px 8px;background:linear-gradient(#06151ee8,#06151e00)}.pill{border:1px solid var(--line);background:#0b2029d9;border-radius:999px;padding:7px 10px;font-size:12px;backdrop-filter:blur(8px)}#place{font-weight:800;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.progress{position:absolute;left:10px;right:10px;top:calc(env(safe-area-inset-top) + 48px);height:7px;background:#061016cc;border:1px solid var(--line);border-radius:9px;overflow:hidden}.progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8a6b39,var(--cyan));transition:width .35s}.cross{position:absolute;left:50%;top:50%;width:16px;height:16px;transform:translate(-50%,-50%)}.cross:before,.cross:after{content:"";position:absolute;background:#fff9;box-shadow:0 0 5px #000}.cross:before{width:16px;height:2px;left:0;top:7px}.cross:after{width:2px;height:16px;left:7px;top:0}.notice{position:absolute;left:50%;top:18%;transform:translateX(-50%);padding:8px 12px;background:#07161de8;border:1px solid var(--line);border-radius:10px;font-size:13px;opacity:0;transition:.25s;max-width:min(90vw,560px);text-align:center}.notice.show{opacity:1}.prompt{position:absolute;left:50%;bottom:110px;transform:translateX(-50%);background:#07161dec;border:1px solid var(--cyan);border-radius:12px;padding:9px 14px;font-weight:800;font-size:13px;opacity:0;transition:.15s;white-space:nowrap}.prompt.show{opacity:1}
+#interact{pointer-events:auto;position:fixed;right:calc(env(safe-area-inset-right) + 18px);bottom:calc(env(safe-area-inset-bottom) + 28px);width:76px;height:76px;border-radius:50%;border:2px solid #69e3ef;background:#173c47df;box-shadow:0 8px 24px #0008;font-weight:900;z-index:12;display:none}#interact.available{display:block;animation:pulse 1.7s infinite}@keyframes pulse{50%{box-shadow:0 0 0 10px #59d8ea20,0 8px 24px #0008}}
+#stick{pointer-events:auto;position:fixed;left:calc(env(safe-area-inset-left) + 18px);bottom:calc(env(safe-area-inset-bottom) + 24px);width:126px;height:126px;border:1px solid #7895a066;border-radius:50%;background:#122a3459;z-index:12;display:none;touch-action:none}#knob{position:absolute;left:38px;top:38px;width:50px;height:50px;border-radius:50%;background:#5b818dcc;border:1px solid #bde8ef88;box-shadow:0 5px 15px #0007}.mobileHint{display:none;position:fixed;right:18px;bottom:112px;color:#b7cbd2;font-size:11px;z-index:10;pointer-events:none;text-align:right}
+#menuBtn{pointer-events:auto;position:fixed;right:10px;top:calc(env(safe-area-inset-top) + 8px);z-index:15;border:1px solid var(--line);background:#0b2029e8;border-radius:9px;padding:7px 10px}
+.overlay{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle at 50% 18%,#17414df5,#020709fb)}.sheet{width:min(620px,100%);max-height:92vh;overflow:auto;background:#07161dd9;border:1px solid #35525d;border-radius:20px;padding:22px;box-shadow:0 25px 80px #000b}.logo{font-size:clamp(28px,7vw,52px);font-weight:950;letter-spacing:.04em;margin:0}.sub{color:#9fc0c9;margin:5px 0 18px}.model{border:1px solid #42606a;background:#0e2530;border-radius:13px;padding:12px;margin:12px 0;text-align:left}.model b{color:#eafaff}.model small{display:block;color:#9fb8c0;margin-top:5px;line-height:1.6}.mainBtn{width:100%;border:1px solid #7be6f1;background:linear-gradient(#1c6674,#164752);border-radius:13px;padding:14px;font-weight:900;font-size:18px;cursor:pointer}.secondary{border:1px solid var(--line);background:#102630;border-radius:10px;padding:10px 12px;cursor:pointer}.gridBtns{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.tiny{font-size:11px;color:#91aab3;line-height:1.6}.tabs{display:flex;gap:7px;position:sticky;top:-22px;background:#07161df5;padding:5px 0 10px;z-index:2}.tabs button{flex:1}.tabs button.on{border-color:var(--cyan);color:var(--cyan)}.panelTitle{font-size:22px;margin:6px 0 15px}.mission{display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid #28434d;padding:11px 2px}.check{width:22px;height:22px;border:1px solid #526e78;border-radius:6px;display:grid;place-items:center;flex:none}.done .check{background:#2b7961;border-color:#77d7aa}.done .check:after{content:"✓"}.mission b{display:block}.mission small{color:#9eb3ba}.ency{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:9px}.entry{border:1px solid #2f4a55;background:#0c2029;border-radius:12px;padding:11px;min-height:105px}.entry.lock{filter:grayscale(1);opacity:.43}.entry .ico{font-size:26px}.entry b{display:block;margin:4px 0}.entry small{color:#a4bac1;line-height:1.45}.dialog{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 12px);z-index:25;background:linear-gradient(#12303bfa,#07161dfa);border:1px solid #3d616d;border-left:5px solid var(--cyan);border-radius:16px;padding:16px;box-shadow:0 18px 50px #000c;max-width:680px;margin:auto}.dialog h2{margin:0 35px 5px 0;font-size:20px}.dialog p{margin:0;color:#c4d9df;line-height:1.75;font-size:14px}.dialog .close{position:absolute;right:9px;top:8px;width:32px;height:32px;border:0;background:#ffffff0d;border-radius:50%;font-size:20px}.dialog .more{margin-top:10px;border:1px solid var(--line);background:#17313a;border-radius:8px;padding:8px 10px}.details{margin-top:9px;padding-top:9px;border-top:1px solid #35515a;color:#a9c2ca!important}.error{position:fixed;left:5px;right:5px;top:5px;z-index:99;background:#5a1010;color:white;padding:10px;border:2px solid #ff7777;font:12px monospace;white-space:pre-wrap;max-height:40vh;overflow:auto}
+@media(pointer:coarse),(max-width:800px){#stick,.mobileHint{display:block}.prompt{bottom:122px}.topbar{padding-right:55px}.desktopOnly{display:none}}@media(pointer:fine){#interact{display:none!important}}
+
+/* CB型・明るいマイクラ風 */
+:root{--bg:#9edcf0;--panel:#174d62e8;--ink:#f8feff;--muted:#d7edf3;--line:#7fc4d5;--cyan:#6ff1ff}
+#game{background:#a9e4f3}.overlay{background:linear-gradient(160deg,#98ddedfa,#3b8da6fa)}.sheet{background:#135168e8;border-color:#9de8f4}.model{background:#23728a;border-color:#a4edf5}.mainBtn{background:linear-gradient(#36b8cc,#21849b)}
+
+/* v2: 低速操作・明るいブロック世界 */
+#stick{width:142px;height:142px;background:radial-gradient(circle,#ffffff18 0 40%,#164e6266 42% 68%,#d8fbff38 70%);border:2px solid #e4fbff88;box-shadow:inset 0 0 28px #0b5f7755,0 12px 30px #1238}
+#knob{left:44px;top:44px;width:54px;height:54px;background:linear-gradient(145deg,#eafcffdd,#63bfd2dd);border:2px solid #fff;box-shadow:0 6px 18px #064c5d88}
+#interact{background:linear-gradient(145deg,#5ee3f0ee,#187f98ee);border-color:#eaffff;box-shadow:0 9px 28px #07566b88}
+.topbar .pill{background:#17647bd9;border-color:#b9eff7;color:#fff;box-shadow:0 3px 10px #13516a44}
+.cross{opacity:.75}.prompt{background:#175c70ee;border-color:#fff;color:#fff;box-shadow:0 8px 24px #134d6688}
+#flowArrow{position:fixed;left:50%;top:calc(50% + 55px);transform:translateX(-50%);z-index:9;pointer-events:none;font-weight:900;font-size:12px;color:#fff;background:#19728bcc;border:1px solid #c8f6ff;border-radius:999px;padding:6px 10px;opacity:.92;transition:.2s}
+#zoneCaption{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 74px);transform:translateX(-50%);z-index:10;pointer-events:none;background:#ffffffd8;color:#17556a;border:2px solid #5db9ce;border-radius:13px;padding:7px 14px;font-weight:950;font-size:13px;box-shadow:0 7px 20px #19586b35;white-space:nowrap}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:7;background:radial-gradient(ellipse at center,transparent 48%,rgba(5,56,70,.08) 72%,rgba(4,39,50,.28) 100%)}
+@media(max-width:420px){#stick{width:132px;height:132px}#knob{left:40px;top:40px;width:52px;height:52px}#flowArrow{top:calc(50% + 48px)}}
+</style>
+</head>
+<body>
+<div id="game"><canvas id="cv"></canvas></div><div class="vignette"></div><div id="zoneCaption" class="hidden">流入管</div><div id="flowArrow" class="hidden">水の流れ →</div>
+<div id="hud" class="hidden"><div class="topbar"><span class="pill" id="modelBadge">CB-5・汚れ視点</span><span class="pill" id="place">家</span><span class="pill" id="found">発見 0/10</span></div><div class="progress"><i id="prog"></i></div><div class="cross"></div><div class="notice" id="notice"></div><div class="prompt" id="prompt">E：調べる</div></div>
+<button id="menuBtn" class="hidden">☰</button><div id="stick" class="hidden"><div id="knob"></div></div><button id="interact">調べる</button><div class="mobileHint hidden">右側をドラッグ<br>視点操作</div>
+<div id="start" class="overlay"><div class="sheet"><p class="logo">浄化槽探検</p><p class="sub">JOKASO ADVENTURE — CB-5 汚れの旅</p><div class="model"><b>フジクリーン CB型5人槽 — 排水に混ざった「汚れ」視点</b><small>流入管の水流からすぐ開始します。あなたは排水に混ざった小さな汚れ。明るいブロック世界になったCB型5人槽を、水の通り道に沿って進みます。沈殿・嫌気処理・流量調整・接触ろ床・消毒を、設備を探しながら体験できます。</small></div><button class="mainBtn" id="startBtn">はじめる</button><div class="gridBtns"><button class="secondary" id="openBook0">図鑑</button><button class="secondary" id="openSettings0">設定</button></div><p class="tiny">※実機図面をもとに、探索可能な大きさへ教育用デフォルメしています。実際の浄化槽内部へ入ることは非常に危険です。</p><p class="tiny">PC：WASD移動／マウスドラッグ視点／E調査／Shift走る／Escメニュー<br>スマホ：左スティック移動／画面右側ドラッグ視点／対象に近づくと「調べる」表示</p></div></div>
+<div id="menu" class="overlay hidden"><div class="sheet"><div class="tabs"><button class="secondary on" data-tab="missions">ミッション</button><button class="secondary" data-tab="book">図鑑</button><button class="secondary" data-tab="settings">設定</button></div><div id="tabContent"></div><div class="gridBtns"><button class="secondary" id="resume">ゲームに戻る</button><button class="secondary" id="restart">最初から</button></div></div></div>
+<div id="dialog" class="dialog hidden"><button class="close">×</button><h2 id="dlgTitle"></h2><p id="dlgBody"></p><button class="more" id="moreBtn">もっと知る</button><p id="dlgMore" class="details hidden"></p></div>
+<script>
+(()=>{'use strict';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+window.addEventListener('error',e=>{const x=document.createElement('div');x.className='error';x.textContent='エラー: '+e.message+'\n'+(e.filename||'')+':'+(e.lineno||'');document.body.appendChild(x)});
+const cv=$('#cv'),ctx=cv.getContext('2d',{alpha:false});let W=1,H=1,DPR=1;
+function resize(){const r=cv.getBoundingClientRect();DPR=Math.min(2,devicePixelRatio||1);W=cv.width=Math.max(1,Math.round(r.width*DPR));H=cv.height=Math.max(1,Math.round(r.height*DPR));}addEventListener('resize',resize,{passive:true});resize();
+const C={wall:'#cbd2ce',frp:'#e9ece6',pipe:'#b7c7cf',wood:'#9e7653',tile:'#d8e2e5',soil:'#796044',grass:'#568159',water:'#418ba8',dirty:'#765a37',green:'#638a59',aer:'#3e8e9d',settle:'#b49b50',dis:'#8063a0',out:'#5087a8'};
+const scenes={
+ pipe:{name:'流入管の中',sky:'#d8f4ff',floor:'#7fc9dc',map:[
+'111111111111111111111111111111','100000000000000000000000000001','101111111111111111111111111101','101000000000000000000000001101','101000000000000000000000001101','101000000000000000000000000001','101000000000000000000000001101','101000000000000000000000001101','101111111111111111111111111101','100000000000000000000000000001','111111111111111111111111111111'],start:[2,5,0],walls:{'1':'#d9eef3'},items:[
+{x:4.5,y:5,id:'waste',ico:'🟤',name:'汚れのかけら',short:'あなたは家庭排水に混ざった小さな汚れ。',more:'このゲームでは水や有機物の視点で処理工程をたどります。実際の排水には食べ物の細片、せっけん、し尿由来の物質など、さまざまな汚れが含まれます。'},
+{x:9,y:5,id:'flow',ico:'💦',name:'流れる排水',short:'管の勾配に沿って浄化槽へ流れていく。',more:'CB型図面では流入管はφ100として示されています。ゲームでは中を歩ける大きさに拡大しています。'},
+{x:15,y:5,id:'pipewall',ico:'⭕',name:'流入管φ100',short:'丸い配管をマイクラ風のブロックで表現。',more:'実物は円形管ですが、探索しやすいよう断面をブロック状にデフォルメしています。'},
+{x:26.7,y:5,id:'inlet',ico:'⬇️',name:'浄化槽流入口',short:'ここからCB型5人槽の内部へ入る。',more:'流入バッフルで流れを受け、槽内の浮上物を乱しにくくします。',action:'tank'}],ambient:'waste'},
+ tank:{name:'CB型5人槽・内部',sky:'#dff7ff',floor:'#67bcd0',map:[
+'11111111111111111111111111111111111',
+'10000001000000100000010000010001001',
+'10000001000000100000010000010001001',
+'10000001000000100000010000010001001',
+'10000001000000100000010000010001001',
+'10000000000000100000010000010001001',
+'10000001000000100000010000010001001',
+'10000001000000100000000000010001001',
+'10000001000000100000010000010001001',
+'10000001000000100000010000010000001',
+'10000001000000000000010000010001001',
+'10000001000000100000010000000001001',
+'10000001000000100000010000010001001',
+'10000001000000100000010000010001001',
+'10000001000000100000010000010001001',
+'10000001000000100000010000010001001',
+'10000001000000100000010000010001001',
+'10000001000000100000010000010001001',
+'11111111111111111111111111111111111'],start:[2,5,0],walls:{'1':'#f2f5e9'},zones:[
+{x0:1,x1:7,y0:1,y1:18,name:'沈殿分離槽',color:'#e8ba73'},
+{x0:8,x1:14,y0:1,y1:18,name:'嫌気ろ床槽',color:'#9bd27e'},
+{x0:15,x1:21,y0:1,y1:18,name:'ピークカット部',color:'#f1d67a'},
+{x0:22,x1:27,y0:1,y1:18,name:'接触ろ床槽',color:'#75d5df'},
+{x0:28,x1:31,y0:1,y1:18,name:'処理水槽',color:'#79c8f0'},
+{x0:32,x1:35,y0:1,y1:18,name:'消毒槽',color:'#d3a5ef'}],items:[
+{x:2.4,y:5,id:'baffle',ico:'🧱',name:'流入バッフル',short:'勢いよく入った排水を受け止める。',more:'図面に記載される流入バッフルを教材用に再現しています。流入水の勢いを弱め、槽内のスカムや沈殿物を乱しにくくします。'},
+{x:4.5,y:11,id:'separation',ico:'🟤',name:'沈殿分離槽',short:'重いものは沈み、軽いものは浮く。',more:'まず物理的な固液分離を行います。底には汚泥、表面にはスカムがたまり、中央付近の水が次工程へ進みます。'},
+{x:6.5,y:5,id:'opening1',ico:'◻️',name:'第1移流口',short:'隔壁の開口だけが次の槽への道。',more:'壁は通り抜けられません。水もプレイヤーも、図面を参考に設けた開口部から次の区画へ進みます。'},
+{x:10.5,y:7,id:'anaerobicMedia',ico:'🧺',name:'嫌気ろ床槽ろ材',short:'網様円筒状ろ材に微生物が住む。',more:'添付図面には「嫌気ろ床槽ろ材（網様円筒状）」と記載されています。酸素の少ない環境で生物膜が汚れを分解します。'},
+{x:13.5,y:10,id:'opening2',ico:'◻️',name:'嫌気ろ床槽の移流口',short:'ろ材の間を通った水が次へ向かう。',more:'短絡を避けて槽全体を使えるよう、開口の位置をずらして表現しています。'},
+{x:17.5,y:8,id:'peakcut',ico:'🌊',name:'ピークカット部',short:'一度に入る水量の変動を和らげる。',more:'図面に示されるピークカット部を再現しています。流入量が多い時間帯でも、後段への負荷を急激に増やさない役割があります。'},
+{x:20.5,y:10,id:'airlift',ico:'⬆️',name:'移送エアリフト',short:'空気の力で水を次工程へ移す。',more:'ブロワ空気を管へ送り、気泡と水の混合物を持ち上げます。機械的なポンプとは違う移送方法です。'},
+{x:24,y:6,id:'contactMedia',ico:'🌀',name:'接触ろ床槽ろ材',short:'網様ロール状ろ材の生物膜が働く。',more:'添付図面には「接触ろ床槽ろ材（網様ロール状）」と記載されています。明るい水色ブロックで表現しています。'},
+{x:24,y:12,id:'diffuser',ico:'🫧',name:'散気部',short:'泡で酸素と水流をつくる。',more:'ブロワから送られる空気で好気性微生物へ酸素を供給し、接触ろ材の周囲に循環流をつくります。'},
+{x:27.5,y:11,id:'opening3',ico:'◻️',name:'接触ろ床槽の流出口',short:'生物処理された水が処理水槽へ進む。',more:'捕捉・分解された後の水が、決められた経路で次の小区画へ移ります。'},
+{x:29.5,y:8,id:'treated',ico:'💧',name:'処理水槽',short:'消毒前の処理水を一時的にためる。',more:'水量を整え、放流側へ安定して送る区画です。図面には放流エアリフトポンプも示されています。'},
+{x:30.5,y:12,id:'outAirlift',ico:'⬆️',name:'放流エアリフトポンプ',short:'処理水を消毒・放流側へ移す。',more:'添付されたCB型図面に記載されている設備です。空気の力を使って処理水を移送します。'},
+{x:33.2,y:9,id:'chlorine',ico:'🧪',name:'薬剤筒・消毒槽',short:'塩素剤へ触れさせて消毒する。',more:'図面に示される薬剤筒を紫色のブロックで再現しています。薬剤残量や溶け方は維持管理で確認します。'},
+{x:34.2,y:15.5,id:'outfall',ico:'➡️',name:'放流管φ100',short:'処理された水が浄化槽の外へ出る。',more:'CB型図面には放流管φ100が示されています。ここまで来れば汚れの旅は完了です。',action:'finish'}],ambient:'cb'}
+};
+
+// CB型の各槽を明るい色のブロック壁で識別できるようにする。
+(function colorizeCB(){
+ const s=scenes.tank, rows=s.map.map(r=>r.split(''));
+ const wallType=x=>x<=7?'2':x<=14?'3':x<=21?'4':x<=27?'5':x<=31?'6':'7';
+ for(let y=0;y<rows.length;y++)for(let x=0;x<rows[y].length;x++)if(rows[y][x]==='1')rows[y][x]=wallType(x);
+ s.map=rows.map(r=>r.join(''));
+ s.walls={'2':'#f1c784','3':'#a9db8e','4':'#f5df84','5':'#85dbe2','6':'#8ed1f2','7':'#d9b3f1'};
+})();
+const itemDefs={};Object.values(scenes).forEach(s=>s.items.forEach(i=>itemDefs[i.id]=i));
+const missionOrder=['waste','flow','inlet','baffle','separation','anaerobicMedia','peakcut','contactMedia','diffuser','chlorine','outfall'];
+const missionText={waste:'自分が「汚れのかけら」だと知ろう',flow:'排水の流れを確かめよう',inlet:'CB型の流入口へ入ろう',baffle:'流入バッフルを見つけよう',separation:'沈殿分離を観察しよう',anaerobicMedia:'嫌気ろ床のろ材を探そう',peakcut:'ピークカット部を通ろう',contactMedia:'接触ろ床槽ろ材を探そう',diffuser:'泡を出す散気部を探そう',chlorine:'薬剤筒を調べよう',outfall:'放流管まで到達しよう'};
+let state={scene:'pipe',x:2,y:5,a:0,playing:false,paused:false,found:new Set(),speed:.0075,fov:Math.PI/3.15,quality:1,flowAssist:true,bob:0};
+let keys={},near=null,last=0,noticeTimer=0,particles=[];
+function scene(){return scenes[state.scene]}function cell(x,y){const s=scene(),xx=Math.floor(x),yy=Math.floor(y);if(yy<0||yy>=s.map.length||xx<0||xx>=s.map[0].length)return '1';return s.map[yy][xx]}
+function blocked(x,y){const r=.22;return cell(x-r,y-r)!=='0'||cell(x+r,y-r)!=='0'||cell(x-r,y+r)!=='0'||cell(x+r,y+r)!=='0'}
+function moveTo(name){const s=scenes[name];state.scene=name;[state.x,state.y,state.a]=s.start;particles=[];notify(s.name);updateHUD();}
+function currentZone(){const s=scene();if(!s.zones)return s.name;const z=s.zones.find(z=>state.x>=z.x0&&state.x<z.x1&&state.y>=z.y0&&state.y<z.y1);return z?z.name:s.name}
+function updateNear(){near=null;let best=1.35;for(const i of scene().items){const d=Math.hypot(i.x-state.x,i.y-state.y);if(d<best){best=d;near=i}}const avail=!!near;$('#prompt').classList.toggle('show',avail);$('#prompt').textContent=avail?((matchMedia('(pointer:coarse)').matches?'「調べる」':'E')+'：'+near.name):'';$('#interact').classList.toggle('available',avail)}
+function discover(id){if(!state.found.has(id)){state.found.add(id);notify('図鑑に登録：「'+itemDefs[id].name+'」');save();updateHUD()}}
+function interact(){if(!near)return;discover(near.id);showDialog(near);if(near.action)setTimeout(()=>{if(near.action==='finish'){showFinish()}else moveTo(near.action)},450)}
+function showDialog(i){$('#dlgTitle').textContent=i.ico+' '+i.name;$('#dlgBody').textContent=i.short;$('#dlgMore').textContent=i.more;$('#dlgMore').classList.add('hidden');$('#moreBtn').textContent='もっと知る';$('#dialog').classList.remove('hidden')}
+function notify(t){const n=$('#notice');n.textContent=t;n.classList.add('show');clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>n.classList.remove('show'),2200)}
+function updateHUD(){const f=missionOrder.filter(x=>state.found.has(x)).length,z=currentZone();$('#place').textContent=z;$('#found').textContent=`発見 ${f}/${missionOrder.length}`;$('#prog').style.width=(f/missionOrder.length*100)+'%';$('#zoneCaption').textContent=z;$('#zoneCaption').classList.toggle('hidden',!state.playing||state.paused);$('#flowArrow').classList.toggle('hidden',!state.playing||state.paused);$('#flowArrow').textContent=state.scene==='pipe'?'水流に沿って浄化槽へ →':'水の通り道を探そう →'}
+function shade(hex,f){const n=parseInt(hex.slice(1),16),r=Math.max(0,Math.min(255,(n>>16)*f)),g=Math.max(0,Math.min(255,((n>>8)&255)*f)),b=Math.max(0,Math.min(255,(n&255)*f));return `rgb(${r|0},${g|0},${b|0})`}
+function raycast(){const s=scene(),t=performance.now()/1000;
+// 天井と水面。配管では丸い管内に見える明暗、槽内では明るいFRP天井を描く。
+let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,s===scenes.pipe?'#bfeeff':'#d9f8ff');g.addColorStop(.48,s===scenes.pipe?'#73bfd3':'#bcecf5');g.addColorStop(.5,s.floor);g.addColorStop(1,shade(s.floor,.62));ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+// 水面のブロック格子
+ctx.save();ctx.globalAlpha=.13;ctx.strokeStyle='#ffffff';ctx.lineWidth=1*DPR;const horizon=H*.5;for(let y=horizon;y<H;y+=Math.max(10*DPR,(y-horizon)*.12)){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}for(let x=-W;x<W*2;x+=42*DPR){ctx.beginPath();ctx.moveTo(W/2,horizon);ctx.lineTo(x,H);ctx.stroke()}ctx.restore();
+const strips=Math.max(180,Math.floor(W/(state.quality===2?2:3.5))),sw=W/strips;const zbuf=new Float32Array(strips);
+for(let col=0;col<strips;col++){const ra=state.a-state.fov/2+(col/strips)*state.fov,dx=Math.cos(ra),dy=Math.sin(ra);let mapX=Math.floor(state.x),mapY=Math.floor(state.y),deltaX=Math.abs(1/(dx||.0001)),deltaY=Math.abs(1/(dy||.0001)),stepX,stepY,sideX,sideY;if(dx<0){stepX=-1;sideX=(state.x-mapX)*deltaX}else{stepX=1;sideX=(mapX+1-state.x)*deltaX}if(dy<0){stepY=-1;sideY=(state.y-mapY)*deltaY}else{stepY=1;sideY=(mapY+1-state.y)*deltaY}let hit='0',side=0,guard=0;while(hit==='0'&&guard++<90){if(sideX<sideY){sideX+=deltaX;mapX+=stepX;side=0}else{sideY+=deltaY;mapY+=stepY;side=1}hit=(s.map[mapY]&&s.map[mapY][mapX])||'1'}let dist=side===0?(mapX-state.x+(1-stepX)/2)/(dx||.0001):(mapY-state.y+(1-stepY)/2)/(dy||.0001);dist*=Math.cos(ra-state.a);zbuf[col]=dist;const h=Math.min(H*2,H/(dist*.70)),top=(H-h)/2;let color=s.walls[hit]||'#e9f1ee';let factor=Math.max(.38,1-dist/28)*(side?.82:1);ctx.fillStyle=shade(color,factor);ctx.fillRect(col*sw,top,sw+1,h);
+// マイクラ風ブロックの横目地・縦目地
+const wallX=side===0?state.y+dist*Math.sin(ra):state.x+dist*Math.cos(ra),frac=wallX-Math.floor(wallX);if(frac<.045||frac>.955){ctx.fillStyle='rgba(35,83,91,.22)';ctx.fillRect(col*sw,top,sw+1,h)}const blockH=Math.max(8*DPR,h/5);for(let yy=top+blockH;yy<top+h;yy+=blockH){ctx.fillStyle='rgba(255,255,255,.10)';ctx.fillRect(col*sw,yy,sw+1,1*DPR)}if(dist<8){ctx.fillStyle=`rgba(255,255,255,${Math.max(0,.09-dist*.008)})`;ctx.fillRect(col*sw,top,1,h)}}
+renderSprites(zbuf,strips,sw);renderEffects();
+// 配管の円形感
+if(s===scenes.pipe){ctx.save();ctx.strokeStyle='#eefeffaa';ctx.lineWidth=18*DPR;ctx.beginPath();ctx.ellipse(W/2,H/2,W*.53,H*.64,0,0,Math.PI*2);ctx.stroke();ctx.restore()}}
+function renderSprites(zbuf,strips,sw){const route=scene().zones?scene().zones.map((z,k)=>({x:(z.x0+z.x1)/2,y:k%2?2.1:16.2,id:"zone"+k,ico:"◆",name:z.name,route:true})):[];const arr=[...scene().items,...route].map(i=>{const dx=i.x-state.x,dy=i.y-state.y;return{i,dist:Math.hypot(dx,dy),ang:Math.atan2(dy,dx)-state.a}}).sort((a,b)=>b.dist-a.dist);for(const o of arr){let ang=o.ang;while(ang>Math.PI)ang-=Math.PI*2;while(ang<-Math.PI)ang+=Math.PI*2;if(Math.abs(ang)>state.fov*.75||o.dist<.2)continue;const sx=(.5+ang/state.fov)*W,size=Math.min(H*.45,H/(o.dist*.85)),col=Math.floor(sx/sw);if(col<0||col>=strips||o.dist>zbuf[col]+.2)continue;ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`${Math.max(18,size*(o.i.route?.20:.52))}px sans-serif`;ctx.fillStyle=o.i.route?'#ffffffcc':'#ffffff';ctx.shadowColor='#000';ctx.shadowBlur=8*DPR;ctx.fillText(o.i.ico,sx,H/2+size*.05);if(o.dist<(o.i.route?4.2:2.8)){ctx.font=`bold ${Math.max(11,size*.12)}px sans-serif`;ctx.fillStyle='#effcff';ctx.fillText(o.i.name,sx,H/2+size*.48)}ctx.restore()}}
+function renderEffects(){const t=performance.now()/1000;if(scene().ambient==='waste'){ctx.save();for(let i=0;i<18;i++){const x=((i*131+t*34)%W),y=H*.56+Math.sin(t*1.8+i)*H*.13,r=(3+i%5)*DPR;ctx.fillStyle=`rgba(132,83,45,${.16+(i%4)*.05})`;ctx.fillRect(x,y,r*1.8,r*1.2)}ctx.strokeStyle='#dff8ff66';ctx.lineWidth=3*DPR;for(let i=0;i<9;i++){const y=H*.58+i*18*DPR;ctx.beginPath();ctx.moveTo((t*70+i*97)%W-100,y);ctx.lineTo((t*70+i*97)%W+90,y);ctx.stroke()}ctx.restore()}if(scene().ambient==='cb'){ctx.save();for(let i=0;i<38;i++){const x=((i*89+t*(18+i%7))%W),y=H-((i*53+t*(28+i%6)*DPR)%H*.82),r=(2+i%4)*DPR;ctx.strokeStyle=`rgba(218,250,255,${.22+(i%3)*.09})`;ctx.lineWidth=1.5*DPR;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.stroke()}ctx.fillStyle='#7a4d2a22';for(let i=0;i<12;i++){const x=(i*149+t*8)%W,y=H*.80+Math.sin(i+t)*12*DPR;ctx.fillRect(x,y,(7+i%4)*DPR,(4+i%3)*DPR)}ctx.restore()}}
+function control(dt){if(!state.playing||state.paused)return;joyX+=(joyTargetX-joyX)*Math.min(1,.16*dt);joyY+=(joyTargetY-joyY)*Math.min(1,.16*dt);const run=keys.shift?1.22:1,sp=state.speed*dt*60*run;let f=(keys.w?1:0)-(keys.s?1:0),st=(keys.d?1:0)-(keys.a?1:0);f+=joyY*-1;st+=joyX;if(state.scene==='pipe'&&state.flowAssist&&Math.abs(f)+Math.abs(st)<.03)f=.08;const len=Math.hypot(f,st);if(len>1){f/=len;st/=len}let nx=state.x+(Math.cos(state.a)*f+Math.cos(state.a+Math.PI/2)*st)*sp,ny=state.y+(Math.sin(state.a)*f+Math.sin(state.a+Math.PI/2)*st)*sp;if(!blocked(nx,state.y))state.x=nx;if(!blocked(state.x,ny))state.y=ny;state.bob+=(Math.abs(f)+Math.abs(st))*dt*.055;updateNear();updateHUD()}
+function loop(ts){const dt=Math.min(2.5,(ts-last)/16.667||1);last=ts;if(state.playing&&!state.paused){control(dt);raycast()}requestAnimationFrame(loop)}requestAnimationFrame(loop);
+function startGame(){state.playing=true;state.paused=false;$('#start').classList.add('hidden');$('#hud,#menuBtn,#stick,.mobileHint').forEach?.(()=>{});$('#hud').classList.remove('hidden');$('#menuBtn').classList.remove('hidden');$('#stick').classList.remove('hidden');$('.mobileHint').classList.remove('hidden');$('#zoneCaption,#flowArrow').forEach?.(()=>{});$('#zoneCaption').classList.remove('hidden');$('#flowArrow').classList.remove('hidden');cv.focus();notify('あなたは汚れのかけら。流れに乗ってCB型浄化槽へ進もう');updateHUD()}
+$('#startBtn').addEventListener('click',startGame);$('#startBtn').addEventListener('touchend',e=>{e.preventDefault();startGame()},{passive:false});
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['w','a','s','d','shift'].includes(k))keys[k]=1;if(k==='e')interact();if(k==='escape'&&state.playing)toggleMenu();});addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
+let drag=null;cv.addEventListener('pointerdown',e=>{if(e.clientX<W/DPR*.32&&matchMedia('(pointer:coarse)').matches)return;drag={x:e.clientX};cv.setPointerCapture(e.pointerId)});cv.addEventListener('pointermove',e=>{if(!drag||state.paused)return;state.a+=(e.clientX-drag.x)*.00215;drag.x=e.clientX});cv.addEventListener('pointerup',()=>drag=null);cv.addEventListener('pointercancel',()=>drag=null);$('#interact').addEventListener('pointerdown',e=>{e.preventDefault();interact()});
+let joyX=0,joyY=0,joyTargetX=0,joyTargetY=0,joyId=null;const stick=$('#stick'),knob=$('#knob');function joy(e){const r=stick.getBoundingClientRect(),p=[...e.touches].find(x=>x.identifier===joyId)||e.changedTouches?.[0];if(!p)return;let x=p.clientX-(r.left+r.width/2),y=p.clientY-(r.top+r.height/2),m=Math.hypot(x,y),lim=46;if(m>lim){x=x/m*lim;y=y/m*lim}const nx=x/lim,ny=y/lim,dead=.28;const curve=v=>Math.abs(v)<dead?0:Math.sign(v)*Math.pow((Math.abs(v)-dead)/(1-dead),2.15);joyTargetX=curve(nx)*.43;joyTargetY=curve(ny)*.43;knob.style.transform=`translate(${x}px,${y}px)`}stick.addEventListener('touchstart',e=>{joyId=e.changedTouches[0].identifier;joy(e);e.preventDefault()},{passive:false});stick.addEventListener('touchmove',e=>{joy(e);e.preventDefault()},{passive:false});function joyEnd(){joyX=joyY=joyTargetX=joyTargetY=0;joyId=null;knob.style.transform=''}stick.addEventListener('touchend',joyEnd);stick.addEventListener('touchcancel',joyEnd);
+function toggleMenu(tab='missions'){state.paused=!state.paused;$('#menu').classList.toggle('hidden',!state.paused);if(state.paused)renderTab(tab)}$('#menuBtn').onclick=()=>toggleMenu();$('#resume').onclick=()=>toggleMenu();$('#restart').onclick=()=>{localStorage.removeItem('jokasoCBSaveV2');location.reload()};
+$$('[data-tab]').forEach(b=>b.onclick=()=>{$$('[data-tab]').forEach(x=>x.classList.toggle('on',x===b));renderTab(b.dataset.tab)});$('#openBook0').onclick=()=>{$('#start').classList.add('hidden');state.paused=true;$('#menu').classList.remove('hidden');renderTab('book')};$('#openSettings0').onclick=()=>{$('#start').classList.add('hidden');state.paused=true;$('#menu').classList.remove('hidden');renderTab('settings')};
+function renderTab(tab){$$('[data-tab]').forEach(x=>x.classList.toggle('on',x.dataset.tab===tab));const c=$('#tabContent');if(tab==='missions'){c.innerHTML='<h2 class="panelTitle">探検ミッション</h2>'+missionOrder.map((id,n)=>`<div class="mission ${state.found.has(id)?'done':''}"><span class="check"></span><div><b>${n+1}. ${missionText[id]}</b><small>${state.found.has(id)?'発見済み':'まだ見つけていません'}</small></div></div>`).join('')}else if(tab==='book'){const ids=Object.keys(itemDefs);c.innerHTML='<h2 class="panelTitle">設備図鑑</h2><div class="ency">'+ids.map(id=>{const i=itemDefs[id],on=state.found.has(id);return`<div class="entry ${on?'':'lock'}"><span class="ico">${on?i.ico:'？'}</span><b>${on?i.name:'未発見'}</b><small>${on?i.short:'探検して設備を見つけよう。'}</small></div>`}).join('')+'</div>'}else{c.innerHTML=`<h2 class="panelTitle">設定</h2><div class="mission"><div><b>移動速度</b><small>操作しづらい場合は「ゆっくり」を選んでください。</small></div></div><div class="gridBtns"><button class="secondary speed" data-v=".0045">かなりゆっくり</button><button class="secondary speed" data-v=".0075">標準（低速）</button><button class="secondary speed" data-v=".011">少し速い</button></div><div class="mission"><div><b>描画品質</b><small>スマホで重い場合は軽量を選択してください。</small></div></div><div class="gridBtns"><button class="secondary quality" data-v="1">軽量</button><button class="secondary quality" data-v="2">高画質</button></div><p class="tiny">このゲームは教材用デフォルメです。実際の入槽作業には酸欠・硫化水素など重大な危険があります。</p>`;$$('.speed').forEach(b=>b.onclick=()=>{state.speed=+b.dataset.v;save();notify('移動速度を変更しました')});$$('.quality').forEach(b=>b.onclick=()=>{state.quality=+b.dataset.v;save();notify('描画品質を変更しました')})}}
+$('#dialog .close').onclick=()=>$('#dialog').classList.add('hidden');$('#moreBtn').onclick=()=>{const d=$('#dlgMore'),h=d.classList.toggle('hidden');$('#moreBtn').textContent=h?'もっと知る':'閉じる'};
+function showFinish(){state.paused=true;$('#menu').classList.remove('hidden');$('#tabContent').innerHTML=`<h2 class="panelTitle">🎉 CB型5人槽の旅、完了！</h2><p style="line-height:1.9;color:#c8dce2">汚れのかけらとして流入管から入り、固形物の分離、嫌気処理、流量調整、接触ろ床処理、消毒を経て放流管まで到達しました。</p><div class="model"><b>今回たどった処理順</b><small>沈殿分離槽 → 嫌気ろ床槽 → ピークカット部 → 接触ろ床槽 → 処理水槽 → 消毒槽 → 放流</small></div><p class="tiny">浄化槽は設置して終わりではなく、保守点検・清掃・法定検査によって性能が保たれます。</p>`}
+function save(){try{localStorage.setItem('jokasoCBSaveV2',JSON.stringify({found:[...state.found],speed:state.speed,quality:state.quality}))}catch{}}
+function load(){try{const x=JSON.parse(localStorage.getItem('jokasoCBSaveV2'));if(x){state.found=new Set(x.found||[]);state.speed=x.speed||state.speed;state.quality=x.quality||state.quality}}catch{}}load();
+})();
+</script>
+</body>
+</html>
