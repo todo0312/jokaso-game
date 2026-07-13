@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#07151d">
+<title>浄化槽探検ゲーム Version 5</title>
+<style>
+:root{--bg:#07151d;--panel:#0e2833ee;--line:#315866;--ink:#eefbff;--muted:#a9c2ca;--accent:#56d6e8;--ok:#75d589;--warn:#ffd86a;--danger:#ff7b75}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}button,select{font:inherit}button{touch-action:manipulation}#app{height:100%;display:flex;flex-direction:column}#hud{height:auto;z-index:10;padding:calc(env(safe-area-inset-top) + 7px) 8px 7px;background:linear-gradient(#07151df5,#07151d99,#07151d00)}.hudrow{display:flex;align-items:center;gap:6px}.pill,.hudbtn{border:1px solid var(--line);background:#102c38;color:var(--ink);border-radius:10px;padding:7px 9px;font-size:12px}.pill{color:var(--accent);font-weight:800}.hudbtn{cursor:pointer}.hudbtn:active{transform:translateY(1px)}#place{font-weight:900;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.status{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px;margin-top:5px}.progress{height:6px;border:1px solid var(--line);background:#041018;border-radius:99px;overflow:hidden;margin-top:5px}.progress>div{height:100%;width:0;background:var(--accent);transition:width .25s}#stage{position:relative;flex:1;min-height:0;background:#02070a}canvas{display:block;width:100%;height:100%;touch-action:none}.toast{position:absolute;left:50%;top:12px;transform:translate(-50%,-20px);opacity:0;z-index:25;background:#07151de8;border:1px solid var(--line);border-radius:12px;padding:9px 13px;font-size:12px;transition:.2s;pointer-events:none;max-width:90%;text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}.prompt{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);z-index:15;background:#07151de8;border:1px solid var(--accent);border-radius:999px;padding:8px 14px;font-size:12px;font-weight:800;display:none;pointer-events:none}.prompt.show{display:block}.dialog{position:absolute;left:10px;right:10px;bottom:10px;z-index:30;border:1px solid var(--line);border-left:4px solid var(--accent);background:linear-gradient(#12323f,#091921);border-radius:15px;padding:14px 42px 14px 15px;box-shadow:0 18px 45px #000b;display:none}.dialog.show{display:block}.dialog h3{font-size:17px;margin:3px 0 6px}.dialog p{font-size:13px;line-height:1.65;color:#d3e4e9;margin:0}.dialog small{display:block;color:var(--muted);font-size:10px;margin-top:7px}.close{position:absolute;right:7px;top:6px;border:0;background:transparent;color:var(--muted);font-size:22px;width:32px;height:32px}.more{margin-top:10px;border:1px solid var(--line);background:#153845;color:var(--ink);border-radius:9px;padding:8px 11px}.overlay{position:absolute;inset:0;z-index:50;background:radial-gradient(circle at 50% 18%,#16404ef8,#02070afb);display:flex;align-items:center;justify-content:center;padding:18px}.overlay.hide{display:none}.sheet{width:min(650px,100%);max-height:92vh;overflow:auto;background:#091b24ed;border:1px solid var(--line);border-radius:20px;padding:22px;text-align:center}.sheet h1{font-size:27px;line-height:1.2;margin:2px 0 8px}.sheet .lead{font-size:13px;line-height:1.7;color:#c8dbe1;margin:0 0 16px}.menu{display:grid;gap:9px}.menubtn{width:100%;border:1px solid var(--line);background:#12313e;color:var(--ink);border-radius:13px;padding:13px;font-weight:900;font-size:16px}.menubtn.primary{border-color:var(--accent);background:#164557}.menubtn:active{transform:scale(.99)}.settings{text-align:left;margin:15px 0 4px;border-top:1px solid var(--line);padding-top:13px}.settings label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}.settings select{width:100%;border:1px solid var(--line);background:#102c38;color:var(--ink);border-radius:10px;padding:10px}.tiny{font-size:10px;color:var(--muted);line-height:1.5;margin-top:13px}.joystick{position:fixed;left:calc(env(safe-area-inset-left) + 15px);bottom:calc(env(safe-area-inset-bottom) + 17px);z-index:20;width:122px;height:122px;border-radius:50%;border:1px solid #456b77;background:#102c387d;touch-action:none}.stick{position:absolute;left:36px;top:36px;width:50px;height:50px;border-radius:50%;background:#2b6475dd;border:1px solid #79c9d8;box-shadow:0 5px 18px #0008}.actions{position:fixed;right:calc(env(safe-area-inset-right) + 15px);bottom:calc(env(safe-area-inset-bottom) + 18px);z-index:20;display:flex;flex-direction:column;gap:8px}.action{width:86px;height:58px;border:1px solid var(--line);background:#153845e8;color:var(--ink);border-radius:18px;font-size:12px;font-weight:900}.action.active{border-color:var(--accent);color:var(--accent)}.miniMap{position:absolute;right:10px;top:10px;z-index:8;width:118px;height:82px;border:1px solid var(--line);border-radius:10px;background:#06131bd8;padding:4px;pointer-events:none}.mission{position:absolute;left:10px;top:10px;z-index:8;background:#06131bd8;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:11px;line-height:1.65;pointer-events:none}.mission b{color:var(--accent)}#error{position:absolute;left:10px;right:10px;top:10px;z-index:100;display:none;background:#641d1d;color:#fff;border:1px solid #ff9a9a;border-radius:10px;padding:10px;font-size:12px;white-space:pre-wrap}@media(pointer:fine){.joystick,.actions{opacity:.42}.joystick:hover,.actions:hover{opacity:1}}@media(max-width:600px){.miniMap{width:100px;height:70px}.mission{max-width:180px}.sheet{padding:18px}.sheet h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="hud">
+    <div class="hudrow"><span class="pill" id="modePill">探索</span><div id="place">タイトル</div><button class="hudbtn" id="bookBtn">図鑑</button><button class="hudbtn" id="menuBtn">メニュー</button></div>
+    <div class="progress"><div id="progressFill"></div></div>
+    <div class="status"><span id="routeText">家 → 配管 → 庭 → 浄化槽 → 放流</span><span id="foundText">発見 0/12</span></div>
+  </div>
+  <div id="stage">
+    <canvas id="game" aria-label="浄化槽探検ゲーム"></canvas>
+    <canvas id="mini" class="miniMap"></canvas>
+    <div class="mission" id="mission"><b>ミッション</b><br>シンクを探そう</div>
+    <div class="prompt" id="prompt">調べる</div>
+    <div class="toast" id="toast"></div>
+    <div id="error"></div>
+    <div class="dialog" id="dialog"><button class="close" id="closeDialog">×</button><div id="dialogCode" style="font-size:10px;color:var(--accent);font-family:ui-monospace,monospace"></div><h3 id="dialogTitle"></h3><p id="dialogBody"></p><button class="more" id="moreBtn">もっと知る</button><small id="dialogSource"></small></div>
+    <div class="overlay" id="titleScreen">
+      <div class="sheet">
+        <h1>浄化槽探検</h1>
+        <p class="lead">家の排水がどこへ行くのか、自分の足で追いかけよう。説明は設備を調べた時だけ表示されます。</p>
+        <div class="menu">
+          <button class="menubtn primary" id="startBtn">はじめる</button>
+          <button class="menubtn" id="titleBookBtn">図鑑</button>
+          <button class="menubtn" id="settingsBtn">設定</button>
+        </div>
+        <div class="settings" id="settingsPanel" hidden>
+          <label for="modelSelect">浄化槽モデル</label>
+          <select id="modelSelect">
+            <option value="learning">学習用：嫌気ろ床接触ばっ気方式</option>
+            <option value="nikko">ニッコー：浄化王-5型参考</option>
+            <option value="fujiclean">フジクリーン：CA-5型参考</option>
+            <option value="kubota">クボタ：KZII-5型参考</option>
+          </select>
+        </div>
+        <p class="tiny">PC：WASD／矢印で移動、Shiftで走る、Eで調べる。スマホ：左スティックで移動、画面ドラッグで向き変更、対象の近くで「調べる」。</p>
+      </div>
+    </div>
+    <div class="overlay hide" id="bookScreen"><div class="sheet"><h1>設備図鑑</h1><div id="bookList" style="display:grid;gap:8px;text-align:left"></div><button class="menubtn" id="closeBook" style="margin-top:14px">戻る</button></div></div>
+  </div>
+</div>
+<div class="joystick" id="joystick"><div class="stick" id="stick"></div></div>
+<div class="actions"><button class="action" id="interactBtn">調べる<br>E</button><button class="action" id="runBtn">走る<br>Shift</button></div>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const cv=$('game'),ctx=cv.getContext('2d'),mini=$('mini'),mctx=mini.getContext('2d');
+const state={playing:false,scene:'house',model:'learning',found:new Set(),keys:{},yaw:0,run:false,last:0,near:null,dialogOpen:false};
+const player={x:150,y:240,r:13,speed:135};
+let DPR=1,W=1,H=1,scale=1,joy={active:false,id:null,dx:0,dy:0};
+window.addEventListener('error',e=>{const b=$('error');b.style.display='block';b.textContent='エラー: '+(e.message||'不明')+'\nページを再読み込みしてください。'});
+const MODELS={
+ learning:{name:'学習用モデル',source:'構造例示型：嫌気ろ床接触ばっ気方式',tank:[['嫌気ろ床槽 第1室','#609667'],['嫌気ろ床槽 第2室','#73aa75'],['接触ばっ気槽','#56aec2'],['沈殿槽','#d3b85f'],['消毒槽','#a77cc0']]},
+ nikko:{name:'ニッコー 浄化王-5型参考',source:'浄化王-5型構造図（外形1900×1130mm、本体長1800mm）',tank:[['固液分離貯留槽','#609667'],['嫌気ろ床槽','#73aa75'],['生物ろ過槽','#56aec2'],['処理水槽','#d3b85f'],['消毒槽','#a77cc0']]},
+ fujiclean:{name:'フジクリーン CA-5型参考',source:'CA型小型浄化槽・接触ろ床方式の資料を教育用に簡略化',tank:[['沈殿分離槽','#609667'],['嫌気ろ床槽','#73aa75'],['接触ろ床槽','#56aec2'],['沈殿槽','#d3b85f'],['消毒槽','#a77cc0']]},
+ kubota:{name:'クボタ KZII-5型参考',source:'KZII型カタログの処理フローを教育用に簡略化',tank:[['好気ろ床槽','#56aec2'],['沈殿分離槽','#609667'],['嫌気ろ床槽','#73aa75'],['担体流動槽','#46a9bd'],['接触ろ床槽','#65bac9'],['沈殿槽','#d3b85f'],['消毒槽','#a77cc0']]}
+};
+const ITEMS={
+ sink:['シンク','台所の水は床下の排水管へ流れるよ。','台所排水には油や食べ物のかすが混ざることがあります。油は流さず、拭き取ってから洗うと浄化槽の負担を減らせます。'],
+ toilet:['トイレ','トイレの排水も途中で同じ排水管に合流するよ。','トイレットペーパー以外の異物は詰まりや処理不良の原因になります。'],
+ bath:['お風呂','お風呂の水も床下を通って浄化槽へ向かうよ。','大量の水が一度に流れるため、配管には勾配と十分な太さが必要です。'],
+ blower:['ブロワ','空気を送る機械だよ！','接触ばっ気槽などに空気を送り、好気性微生物が働ける環境をつくります。'],
+ manhole:['マンホール','ここから浄化槽の中へ降りられるよ。','実際の浄化槽内部へ入るのは危険です。このゲームは教育用の仮想空間です。'],
+ media:['ろ材・接触材','微生物が住みつく場所だよ。','表面に生物膜ができ、汚れを分解します。方式によって形や配置が異なります。'],
+ diffuser:['散気管','細かい泡で空気を送るよ。','ブロワから送られた空気を水中に分散し、酸素供給と撹拌を行います。'],
+ pump:['移送ポンプ','水を次の区画へ送る装置だよ。','水位や処理工程に応じて、処理水や循環水を移送します。'],
+ chemical:['薬剤筒','最後に水を消毒するよ。','通常は塩素系消毒剤を用いて、放流前の処理水を消毒します。'],
+ outlet:['放流管','きれいになった水が外へ出るよ。','消毒後の処理水は放流管から側溝などへ流れます。'],
+ ditch:['側溝','処理水が川へ向かう通り道だよ。','放流先の環境を守るため、浄化槽は定期的な保守点検と清掃が必要です。'],
+ river:['川','家で使った水が、処理されてここまで来たよ。','水の循環を守るには、浄化槽を正しく使い、専門業者による維持管理を続けることが大切です。']
+};
+const order=['sink','blower','manhole','media','diffuser','chemical','outlet','ditch','river'];
+function resize(){const r=cv.getBoundingClientRect();DPR=Math.min(2,window.devicePixelRatio||1);W=cv.width=Math.round(r.width*DPR);H=cv.height=Math.round(r.height*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);mini.width=Math.round(mini.clientWidth*DPR);mini.height=Math.round(mini.clientHeight*DPR);mctx.setTransform(DPR,0,0,DPR,0,0);scale=Math.min(r.width/900,r.height/600)}
+window.addEventListener('resize',resize,{passive:true});resize();
+const SCENES={
+ house:{name:'家',w:900,h:600,walls:[[20,20,860,20],[20,560,860,20],[20,20,20,560],[860,20,20,560],[300,20,18,230],[300,330,18,250],[590,20,18,220],[590,320,18,260]],objects:[
+  {id:'sink',x:95,y:85,w:120,h:60,label:'台所シンク',color:'#b8d3da',action:'pipe'},
+  {id:'toilet',x:680,y:78,w:80,h:110,label:'トイレ',color:'#e8ece8'},
+  {id:'bath',x:650,y:365,w:150,h:125,label:'風呂',color:'#8fc8d6'},
+  {id:'wash',x:385,y:90,w:110,h:55,label:'洗面所',color:'#d7e8e9'}]},
+ pipe:{name:'排水管',w:1200,h:420,walls:[[0,0,1200,52],[0,368,1200,52],[0,0,35,420],[1165,0,35,420],[325,52,28,105],[325,245,28,123],[610,52,28,160],[610,292,28,76]],objects:[
+  {id:'toilet',x:270,y:95,w:70,h:55,label:'トイレ排水の合流',color:'#a5d2dc'},
+  {id:'bath',x:555,y:290,w:70,h:55,label:'風呂排水の合流',color:'#7ec5d3'},
+  {id:'pipeExit',x:1080,y:160,w:55,h:100,label:'庭への出口',color:'#c6d8da',action:'yard'}]},
+ yard:{name:'庭',w:1000,h:650,walls:[[0,0,1000,28],[0,622,1000,28],[0,0,28,650],[972,0,28,650],[480,200,320,18],[480,470,320,18]],objects:[
+  {id:'blower',x:135,y:120,w:110,h:75,label:'ブロワ',color:'#d8e7e2'},
+  {id:'manhole',x:570,y:290,w:120,h:120,label:'マンホール',color:'#555f62',action:'tank'},
+  {id:'ditch',x:860,y:50,w:55,h:520,label:'側溝',color:'#6f9ea8'},
+  {id:'yardOutlet',x:760,y:280,w:80,h:50,label:'放流管',color:'#cbd8d8'},
+  {id:'riverGate',x:880,y:515,w:70,h:70,label:'川へ',color:'#66b7d0',action:'river'}]},
+ tank:{name:'浄化槽内部',w:1200,h:520,walls:[],objects:[]},
+ river:{name:'放流先の川',w:1000,h:600,walls:[[0,0,1000,25],[0,575,1000,25],[0,0,25,600],[975,0,25,600]],objects:[{id:'river',x:300,y:70,w:620,h:470,label:'川',color:'#4aa8c7'}]}
+};
+function buildTank(){const s=SCENES.tank,m=MODELS[state.model];s.objects=[];s.walls=[[0,0,1200,28],[0,492,1200,28],[0,0,28,520],[1172,0,28,520]];const x0=70,usable=1060,n=m.tank.length,seg=usable/n;for(let i=0;i<n;i++){const x=x0+i*seg;s.objects.push({id:'chamber'+i,x:x+5,y:70,w:seg-10,h:360,label:m.tank[i][0],color:m.tank[i][1],tank:true,index:i});if(i<n-1){const wallX=x+seg-8;s.walls.push([wallX,28,16,165],[wallX,265,16,227]);}}
+ s.objects.push({id:'media',x:x0+seg*1.35,y:150,w:70,h:180,label:'ろ材・接触材',color:'#817b5f'});s.objects.push({id:'diffuser',x:x0+seg*Math.max(2,n-4)+15,y:385,w:Math.max(80,seg-30),h:18,label:'散気管',color:'#283a42'});s.objects.push({id:'chemical',x:x0+usable-95,y:135,w:28,h:160,label:'薬剤筒',color:'#eef5f5'});s.objects.push({id:'outlet',x:1115,y:220,w:55,h:55,label:'放流口',color:'#b8d0d2',action:'yard'});}
+function setScene(name,x,y){state.scene=name;const s=SCENES[name];if(name==='tank')buildTank();player.x=x??80;player.y=y??s.h/2;state.near=null;updateHud();toast(s.name+'へ移動しました')}
+function rectHitCircle(rect,x,y,r){const [rx,ry,rw,rh]=rect,cx=Math.max(rx,Math.min(x,rx+rw)),cy=Math.max(ry,Math.min(y,ry+rh));return (x-cx)**2+(y-cy)**2<r*r}
+function collides(x,y){const s=SCENES[state.scene];if(x-player.r<0||y-player.r<0||x+player.r>s.w||y+player.r>s.h)return true;return s.walls.some(w=>rectHitCircle(w,x,y,player.r))}
+function move(dx,dy,dt){if(!state.playing||state.dialogOpen)return;let len=Math.hypot(dx,dy);if(len>1){dx/=len;dy/=len}const speed=player.speed*(state.run?1.65:1)*dt;const nx=player.x+dx*speed,ny=player.y+dy*speed;if(!collides(nx,player.y))player.x=nx;if(!collides(player.x,ny))player.y=ny;if(len>.05)state.yaw=Math.atan2(dy,dx)}
+function nearest(){const s=SCENES[state.scene];let best=null,bd=999;for(const o of s.objects){const cx=o.x+o.w/2,cy=o.y+o.h/2,d=Math.hypot(player.x-cx,player.y-cy)-Math.max(o.w,o.h)*.25;if(d<bd){bd=d;best=o}}return bd<85?best:null}
+function interact(){const o=state.near;if(!o){toast('近くに調べられるものがありません');return}if(o.id==='sink'&&o.action==='pipe'){discover('sink');showInfo('sink',()=>setScene('pipe',80,210),'配管へ入る');return}if(o.id==='pipeExit'){setScene('yard',80,320);return}if(o.id==='manhole'){discover('manhole');showInfo('manhole',()=>setScene('tank',60,230),'梯子で降りる');return}if(o.id==='outlet'){discover('outlet');showInfo('outlet',()=>setScene('yard',735,305),'地上へ戻る');return}if(o.id==='riverGate'){discover('ditch');setScene('river',80,300);return}if(o.id.startsWith('chamber')){const m=MODELS[state.model],name=m.tank[o.index][0];showCustom(name,'この機種では「'+name+'」として配置されています。水は隔壁の開口部を通って次の区画へ移ります。',m.source);return}const id=ITEMS[o.id]?o.id:(o.id==='yardOutlet'?'outlet':null);if(id){discover(id);showInfo(id);return}showCustom(o.label,'設備を観察しました。','ゲーム内学習モデル')}
+function discover(id){if(!state.found.has(id)){state.found.add(id);toast('図鑑に「'+ITEMS[id][0]+'」を登録');updateHud();renderBook()}}
+function showInfo(id,next,label){const a=ITEMS[id];showCustom(a[0],a[1],MODELS[state.model].source,a[2],next,label)}
+function showCustom(title,body,source,detail,next,label){state.dialogOpen=true;$('dialog').classList.add('show');$('dialogCode').textContent=state.scene.toUpperCase();$('dialogTitle').textContent=title;$('dialogBody').textContent=body;$('dialogSource').textContent='参考: '+source;const btn=$('moreBtn');btn.textContent=label||'もっと知る';btn.onclick=()=>{if(next){closeDialog();next()}else{$('dialogBody').textContent=detail||body;btn.style.display='none'}};btn.style.display='inline-block'}
+function closeDialog(){state.dialogOpen=false;$('dialog').classList.remove('show')}
+function toast(t){const b=$('toast');b.textContent=t;b.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>b.classList.remove('show'),1900)}
+function updateHud(){const s=SCENES[state.scene];$('place').textContent=s.name+' / '+MODELS[state.model].name;$('foundText').textContent='発見 '+state.found.size+'/'+Object.keys(ITEMS).length;const idx=['house','pipe','yard','tank','river'].indexOf(state.scene);$('progressFill').style.width=(Math.max(0,idx)/4*100)+'%';const next=order.find(x=>!state.found.has(x));$('mission').innerHTML='<b>ミッション</b><br>'+(next?'□ '+ITEMS[next][0]+'を探そう':'✓ 探検完了！')}
+function renderBook(){const list=$('bookList');list.innerHTML='';for(const [id,a] of Object.entries(ITEMS)){const got=state.found.has(id),d=document.createElement('div');d.style.cssText='border:1px solid var(--line);border-radius:11px;padding:10px;background:#102c38';d.innerHTML='<b style="color:'+(got?'var(--accent)':'var(--muted)')+'">'+(got?a[0]:'？？？')+'</b><div style="font-size:11px;color:var(--muted);margin-top:4px">'+(got?a[1]:'まだ発見していません')+'</div>';list.appendChild(d)}}
+function draw(){const rect=cv.getBoundingClientRect(),vw=rect.width,vh=rect.height,s=SCENES[state.scene];ctx.clearRect(0,0,vw,vh);const camX=Math.max(vw/2,Math.min(s.w-vw/2,player.x)),camY=Math.max(vh/2,Math.min(s.h-vh/2,player.y));ctx.save();ctx.translate(vw/2-camX,vh/2-camY);drawScene(s);ctx.restore();drawMini(s)}
+function drawScene(s){ctx.fillStyle=state.scene==='yard'?'#477441':state.scene==='river'?'#8bb172':state.scene==='pipe'?'#263d45':'#d7d0bd';ctx.fillRect(0,0,s.w,s.h);if(state.scene==='house'){ctx.fillStyle='#b8a783';ctx.fillRect(40,40,820,500);ctx.strokeStyle='#e7dec5';ctx.lineWidth=3;for(let x=45;x<850;x+=40){ctx.beginPath();ctx.moveTo(x,40);ctx.lineTo(x,540);ctx.stroke()}}
+ if(state.scene==='pipe'){ctx.fillStyle='#8a9291';ctx.fillRect(35,52,1130,316);ctx.fillStyle='#486f7c';ctx.fillRect(35,125,1130,170);for(let i=0;i<30;i++){ctx.fillStyle='rgba(190,245,255,.55)';ctx.beginPath();ctx.arc(80+i*38,200+35*Math.sin(i),3+(i%4),0,Math.PI*2);ctx.fill()}}
+ if(state.scene==='yard'){ctx.fillStyle='#7d6548';ctx.fillRect(420,160,450,370);ctx.fillStyle='#a8a39b';ctx.fillRect(450,185,390,320)}
+ if(state.scene==='tank'){ctx.fillStyle='#cfd6d2';roundRect(35,35,1130,450,90,true);ctx.fillStyle='#4c6e76';ctx.fillRect(55,55,1090,410)}
+ if(state.scene==='river'){ctx.fillStyle='#55a9c8';ctx.fillRect(260,25,680,550);for(let y=50;y<550;y+=30){ctx.strokeStyle='rgba(220,250,255,.42)';ctx.beginPath();ctx.moveTo(300,y);ctx.bezierCurveTo(450,y-10,650,y+10,900,y);ctx.stroke()}}
+ for(const w of s.walls){ctx.fillStyle='#616b6c';ctx.fillRect(...w)}
+ for(const o of s.objects){ctx.fillStyle=o.color;roundRect(o.x,o.y,o.w,o.h,Math.min(18,o.w*.2),true);ctx.strokeStyle='#1d343a';ctx.lineWidth=2;roundRect(o.x,o.y,o.w,o.h,Math.min(18,o.w*.2),false);if(o.tank){ctx.fillStyle='rgba(255,255,255,.88)';ctx.font='bold 13px sans-serif';ctx.textAlign='center';wrapText(o.label,o.x+o.w/2,o.y+32,o.w-14,16)}else{ctx.fillStyle='#132c34';ctx.font='bold 12px sans-serif';ctx.textAlign='center';wrapText(o.label,o.x+o.w/2,o.y+o.h/2,o.w-10,14)}}
+ ctx.save();ctx.translate(player.x,player.y);ctx.rotate(state.yaw);ctx.fillStyle='#ff6c65';ctx.beginPath();ctx.arc(0,0,player.r,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(12,0);ctx.lineTo(-2,-6);ctx.lineTo(-2,6);ctx.closePath();ctx.fill();ctx.restore()}
+function roundRect(x,y,w,h,r,fill){ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,r):(ctx.rect(x,y,w,h));fill?ctx.fill():ctx.stroke()}
+function wrapText(text,x,y,max,line){const chars=[...text];let row='',yy=y;for(const ch of chars){const test=row+ch;if(ctx.measureText(test).width>max&&row){ctx.fillText(row,x,yy);row=ch;yy+=line}else row=test}if(row)ctx.fillText(row,x,yy)}
+function drawMini(s){const w=mini.clientWidth,h=mini.clientHeight;mctx.clearRect(0,0,w,h);mctx.fillStyle='#08151c';mctx.fillRect(0,0,w,h);const sx=w/s.w,sy=h/s.h;mctx.fillStyle='#45616a';for(const a of s.walls)mctx.fillRect(a[0]*sx,a[1]*sy,a[2]*sx,a[3]*sy);mctx.fillStyle='#7fd4e4';for(const o of s.objects)mctx.fillRect(o.x*sx,o.y*sy,Math.max(2,o.w*sx),Math.max(2,o.h*sy));mctx.fillStyle='#ff6c65';mctx.beginPath();mctx.arc(player.x*sx,player.y*sy,3,0,Math.PI*2);mctx.fill()}
+function loop(t){const dt=Math.min(.04,(t-state.last)/1000||0);state.last=t;let dx=(state.keys.d||state.keys.ArrowRight?1:0)-(state.keys.a||state.keys.ArrowLeft?1:0)+joy.dx;let dy=(state.keys.s||state.keys.ArrowDown?1:0)-(state.keys.w||state.keys.ArrowUp?1:0)+joy.dy;move(dx,dy,dt);state.near=nearest();$('prompt').classList.toggle('show',!!state.near);$('prompt').textContent=state.near?'調べる：'+state.near.label:'';$('interactBtn').classList.toggle('active',!!state.near);draw();requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+window.addEventListener('keydown',e=>{state.keys[e.key]=true;if(e.key==='Shift')state.run=true;if(e.key==='e'||e.key==='E')interact();if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault()});window.addEventListener('keyup',e=>{state.keys[e.key]=false;if(e.key==='Shift')state.run=false});
+const joyEl=$('joystick'),stick=$('stick');function joyMove(e){const r=joyEl.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,max=38,len=Math.hypot(dx,dy)||1,k=Math.min(1,max/len);dx*=k;dy*=k;stick.style.transform=`translate(${dx}px,${dy}px)`;joy.dx=dx/max;joy.dy=dy/max}joyEl.addEventListener('pointerdown',e=>{joy.active=true;joy.id=e.pointerId;joyEl.setPointerCapture(e.pointerId);joyMove(e)});joyEl.addEventListener('pointermove',e=>{if(joy.active&&e.pointerId===joy.id)joyMove(e)});function joyEnd(){joy.active=false;joy.dx=joy.dy=0;stick.style.transform='translate(0,0)'}joyEl.addEventListener('pointerup',joyEnd);joyEl.addEventListener('pointercancel',joyEnd);
+cv.addEventListener('pointerdown',e=>{cv._drag={x:e.clientX};cv.setPointerCapture(e.pointerId)});cv.addEventListener('pointermove',e=>{if(cv._drag){state.yaw+=(e.clientX-cv._drag.x)*.01;cv._drag.x=e.clientX}});cv.addEventListener('pointerup',()=>cv._drag=null);cv.addEventListener('pointercancel',()=>cv._drag=null);
+$('interactBtn').onclick=interact;$('runBtn').onpointerdown=()=>{state.run=true;$('runBtn').classList.add('active')};['pointerup','pointercancel','pointerleave'].forEach(n=>$('runBtn').addEventListener(n,()=>{state.run=false;$('runBtn').classList.remove('active')}));$('closeDialog').onclick=closeDialog;
+function openBook(){$('bookScreen').classList.remove('hide');renderBook()}$('bookBtn').onclick=openBook;$('titleBookBtn').onclick=openBook;$('closeBook').onclick=()=>$('bookScreen').classList.add('hide');$('settingsBtn').onclick=()=>{$('settingsPanel').hidden=!$('settingsPanel').hidden};$('modelSelect').onchange=e=>{state.model=e.target.value;buildTank();updateHud();toast(MODELS[state.model].name+'に変更')};$('menuBtn').onclick=()=>{$('titleScreen').classList.remove('hide');state.playing=false};
+$('startBtn').addEventListener('click',start,{passive:false});$('startBtn').addEventListener('touchend',start,{passive:false});function start(e){e?.preventDefault();state.model=$('modelSelect').value;state.playing=true;$('titleScreen').classList.add('hide');setScene('house',150,250);updateHud();toast('台所のシンクを探そう')}
+buildTank();renderBook();updateHud();
+})();
+</script>
+</body>
+</html>
