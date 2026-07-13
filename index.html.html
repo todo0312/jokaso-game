@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>浄化槽探検ゲーム v6 メーカー構造資料反映版</title>
+<style>
+:root{--bg:#071218;--panel:#0d2029e8;--line:#31505d;--ink:#eef9fc;--muted:#9eb7c0;--cyan:#55d8eb;--green:#6ca970;--aqua:#58b7c8;--yellow:#d4b759;--purple:#ad82c6;--danger:#ff7b73}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}button,select{font:inherit}#app{height:100%;display:flex;flex-direction:column}#hud{z-index:6;padding:calc(env(safe-area-inset-top) + 7px) 8px 7px;background:linear-gradient(#07161eee,#07161e88,#07161e00)}.row{display:flex;gap:6px;align-items:center}.badge,.btn,.selectBox{border:1px solid var(--line);background:#102832;color:var(--ink);border-radius:10px;padding:7px 9px;font-size:12px}.badge{color:var(--cyan);font-weight:800}.selectBox{max-width:220px}.btn{cursor:pointer}.btn.on{border-color:var(--cyan);color:var(--cyan)}#zone{min-width:0;flex:1;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sub{margin-top:5px;display:flex;gap:9px;color:var(--muted);font-size:11px}.sub span:first-child{flex:1}.bar{height:7px;margin-top:5px;border:1px solid var(--line);border-radius:99px;overflow:hidden;background:#041016}.fill{height:100%;width:0;background:var(--cyan);transition:width .2s}
+#stage{position:relative;flex:1;min-height:0}canvas{display:block;width:100%;height:100%;touch-action:none}.help,.mini,.mission{position:absolute;background:#06131bc9;border:1px solid var(--line);border-radius:10px;color:#c9dde3;pointer-events:none}.help{left:10px;top:10px;padding:7px 9px;font-size:11px}.mini{right:10px;top:10px;padding:7px 9px;font:11px ui-monospace,monospace}.mission{left:10px;top:55px;padding:8px 10px;font-size:11px;line-height:1.7}.mission b{color:var(--cyan)}
+.card{position:absolute;left:10px;right:10px;bottom:10px;z-index:10;background:linear-gradient(#102832,#08151c);border:1px solid var(--line);border-left:4px solid var(--cyan);border-radius:14px;padding:12px 38px 12px 14px;box-shadow:0 16px 40px #000a;transform:translateY(135%);transition:.22s}.card.show{transform:translateY(0)}#close{position:absolute;right:6px;top:5px;width:30px;height:30px;text-align:center;line-height:30px;color:var(--muted);cursor:pointer}.cn{font:11px ui-monospace,monospace;color:var(--cyan);display:flex;justify-content:space-between;gap:10px}.ct{font-weight:900;font-size:17px;margin:4px 0}.cb{font-size:13px;line-height:1.65;color:#cfdee3}.source{margin-top:6px;font-size:10px;color:var(--muted)}
+#errorBox{display:none;position:absolute;left:10px;right:10px;top:10px;z-index:60;padding:10px;background:#5b1717;color:#fff;border:1px solid #ff8f8f;border-radius:10px;font-size:12px;white-space:pre-wrap}.overlay{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:18px;background:radial-gradient(circle at 50% 20%,#173641f7,#02070af8)}.overlay.hide{display:none}.sheet{width:min(680px,100%);max-height:90vh;overflow:auto;text-align:center;background:#0a1921e8;border:1px solid var(--line);border-radius:18px;padding:20px}.sheet h1{font-size:24px;margin:0 0 8px}.sheet p{font-size:13px;line-height:1.7;color:#c9dce2}.modelGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:14px 0}.modelChoice{text-align:left;border:1px solid var(--line);background:#102832;color:var(--ink);border-radius:12px;padding:10px;cursor:pointer}.modelChoice.on{border-color:var(--cyan);box-shadow:inset 0 0 0 1px var(--cyan)}.modelChoice b{display:block;font-size:13px}.modelChoice small{display:block;color:var(--muted);margin-top:3px}.startWrap{position:sticky;bottom:-20px;margin:14px -20px -20px;padding:12px 20px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(#0a192100,#0a1921 28%);z-index:5}.startBtn{width:100%;font-size:16px;font-weight:800;padding:14px 30px;min-height:52px;touch-action:manipulation}
+.pad{position:fixed;left:calc(env(safe-area-inset-left) + 14px);bottom:calc(env(safe-area-inset-bottom) + 16px);z-index:12;display:grid;grid-template-columns:58px 58px 58px;grid-template-rows:58px 58px;gap:7px}.pad button,.actions button{border:1px solid var(--line);background:#15323eea;color:var(--ink);box-shadow:0 4px 16px #0008;touch-action:none}.pad button{border-radius:50%;font-size:20px}.pad .up{grid-column:2}.actions{position:fixed;right:calc(env(safe-area-inset-right) + 14px);bottom:calc(env(safe-area-inset-bottom) + 18px);z-index:12;display:flex;flex-direction:column;gap:8px}.actions button{width:80px;height:58px;border-radius:18px;font-size:12px;font-weight:800}.actions .active{border-color:var(--cyan);color:var(--cyan)}
+@media(pointer:fine){.pad,.actions{opacity:.48}.pad:hover,.actions:hover{opacity:.95}}@media(max-width:600px){.modelGrid{grid-template-columns:1fr}.help{display:none}.mission{top:10px}.selectBox{max-width:150px}.cn span:last-child{display:none}}
+</style>
+</head>
+<body>
+<div id="app">
+ <div id="hud">
+  <div class="row"><span class="badge" id="maker">学習用</span><select id="modelSelect" class="selectBox"></select><div id="zone">スタート待機</div><button class="btn" id="viewBtn">断面</button><button class="btn" id="menuBtn">モデル</button></div>
+  <div class="bar"><div class="fill" id="fill"></div></div><div class="sub"><span id="route">流入 → 処理 → 消毒 → 放流</span><span id="found">発見 0/0</span></div>
+ </div>
+ <div id="stage"><div id="errorBox"></div><canvas id="cv" tabindex="0"></canvas><div class="help">WASD/矢印:移動　Shift:走る　ドラッグ:視点　E:調べる　M:モデル</div><div class="mini" id="mini">READY</div><div class="mission" id="mission"></div>
+  <div class="card" id="card"><div id="close">×</div><div class="cn"><span id="code">INFO</span><span>メーカー資料を教育用にデフォルメ</span></div><div class="ct" id="ct"></div><div class="cb" id="cb"></div><div class="source" id="source"></div></div>
+  <div class="overlay" id="start"><div class="sheet"><h1>浄化槽探検ゲーム v6</h1><p>構造図・カタログ・DXF資料をもとに、機種ごとの槽構成、外形比、配管・ろ材・ばっ気設備を見比べながら探検できます。寸法はゲーム内スケールへ正規化し、通行できる開口部を教育用に拡大しています。</p><div class="modelGrid" id="modelGrid"></div><div class="startWrap"><button type="button" class="btn on startBtn" id="startBtn">探検を始める</button></div></div></div>
+ </div>
+</div>
+<div class="pad"><button data-k="f" class="up">▲</button><button data-k="l">◀</button><button data-k="b">▼</button><button data-k="r">▶</button></div><div class="actions"><button id="actBtn">調べる<br>E</button><button id="mapBtn">俯瞰<br>Q</button></div>
+<script>
+(()=>{'use strict';
+window.addEventListener('error',e=>{const b=document.getElementById('errorBox');if(b){b.style.display='block';b.textContent='読み込みエラー: '+(e.message||'不明なエラー')}});
+const $=id=>document.getElementById(id),cv=$('cv'),ctx=cv.getContext('2d');
+let W=1,H=1,DPR=1,playing=false,view='dive',modelId='nikko_j5',yaw=0,player={x:-1.15,z:1.5},keys={},drag=null,running=false,last=0,cardOpen=false,discovered=new Set();
+const C={ana:'#6e9f67',aer:'#57b8c9',sed:'#d1b55d',dis:'#a77bc4',pipe:'#79cce7',frp:'#d9ded9',media:'#817b5f'};
+const MODELS={
+ nikko_j5:{maker:'ニッコー',name:'浄化王-5型',dims:'外形 1900×1130 / 本体長 1800 mm',source:'浄化王-5型 構造図（2020年10月）',width:3.05,segments:[
+  ['固液分離貯留槽',1.15,'ana','流入バッフルで勢いを弱め、固形物と浮上物を分離・貯留します。',['流入バッフル','阻流板']],
+  ['嫌気ろ床槽',.99,'ana','嫌気ろ床で有機物を分解します。構造図ではろ床と移送管が確認できます。',['嫌気ろ材','移送管']],
+  ['生物ろ過槽',.50,'aer','生物ろ過部と散気・逆洗設備をまとめた処理部です。',['生物ろ過部','散気管','逆洗管']],
+  ['処理水槽',.26,'sed','処理水を一時的に保持し、移送ポンプで消毒側へ送ります。',['移送ポンプ']],
+  ['消毒槽',.15,'dis','薬剤筒で消毒して放流管へ送ります。',['薬剤筒']]]},
+ nikko_chi:{maker:'ニッコー',name:'浄化王χ-5型',dims:'外形 2580×1130 / 本体長 2480 mm',source:'浄化王χ-5型 構造図（2020年10月）',width:4.15,segments:[
+  ['固液分離貯留槽',1.55,'ana','大型の固液分離・貯留区画。流入バッフルと阻流板を備えます。',['流入バッフル','阻流板']],
+  ['嫌気ろ床槽',1.39,'ana','嫌気ろ床による生物処理を行います。',['嫌気ろ材','移送管']],
+  ['生物ろ過槽',.65,'aer','担体・生物ろ過部、散気管、逆洗管を備える区画です。',['生物ろ過部','担体流動部','散気管']],
+  ['処理水槽',.34,'sed','処理水を保持して移送します。',['移送ポンプ']],
+  ['消毒槽',.22,'dis','薬剤筒を通して放流します。',['薬剤筒']]]},
+ fuji_ca:{maker:'フジクリーン',name:'CA型 5人槽',dims:'全高浅埋め型・スリムボディ（資料写真比を反映）',source:'フジクリーン CA型 小型浄化槽 商品資料',width:3.30,segments:[
+  ['流量調整・嫌気部',1.05,'ana','流入負荷を受け止め、固液分離と嫌気処理を行います。',['流入バッフル','嫌気ろ材']],
+  ['接触ろ床部',1.25,'aer','CA型の接触ろ床方式を教材用に展開。接触材と散気管を観察できます。',['接触材','散気管','ブロワ配管']],
+  ['沈殿・処理水部',.65,'sed','生物膜のかけらを沈め、上澄みを次へ送ります。',['沈殿部','越流部']],
+  ['消毒槽',.35,'dis','薬剤筒で消毒後、放流します。',['薬剤筒']]]},
+ kubota_kzii:{maker:'クボタ',name:'KZII-5型',dims:'1580×980×1530 mm（5人槽）',source:'クボタ小型・中型浄化槽カタログ 24-07 p.3-4',width:3.20,segments:[
+  ['好気ろ床槽',.62,'aer','流入直後の好気ろ床槽。カタログのフロー順を反映しています。',['好気ろ材','散気管']],
+  ['沈殿分離槽',.50,'sed','固形物を沈殿分離します。',['沈殿分離部']],
+  ['嫌気ろ床槽',.58,'ana','嫌気ろ床で追加処理します。',['嫌気ろ材']],
+  ['担体流動槽',.50,'aer','担体を空気で動かし、微生物処理を行います。',['流動担体','散気管']],
+  ['接触ろ床槽',.45,'aer','接触ろ材表面の生物膜で処理します。',['接触材']],
+  ['沈殿槽',.35,'sed','汚泥を沈め、循環移送ラインで戻します。',['循環移送管']],
+  ['消毒槽',.20,'dis','薬剤筒で消毒します。',['薬剤筒']]]},
+ cxp:{maker:'構造図資料',name:'CXP 5-7人槽',dims:'嫌気ろ床接触ばっ気方式・横長外槽',source:'cxp5-7_zumen.pdf 構造図',width:3.65,segments:[
+  ['嫌気ろ床槽 第1室',.95,'ana','流入側の嫌気ろ床。濾材で固形物を捕捉します。',['嫌気濾材']],
+  ['嫌気ろ床槽 第2室',.72,'ana','第2室で嫌気処理を継続します。',['嫌気濾材','移流口']],
+  ['接触ばっ気槽',1.05,'aer','接触材と散気設備を備えた好気処理区画です。',['接触材','散気管']],
+  ['沈殿槽',.55,'sed','スカムバッフルと沈殿板で固液分離します。',['スカムバッフル','沈殿板']],
+  ['消毒槽',.38,'dis','薬剤筒、越流せき、放流管を備えます。',['薬剤筒','越流せき']]]},
+ mizu:{maker:'ニッコー',name:'水創り王-5型',dims:'構造図資料反映モデル',source:'水創り王-5型 構造図',width:3.35,segments:[
+  ['固液分離・貯留部',1.18,'ana','流入水の固液分離と貯留を行う前処理区画です。',['流入バッフル']],
+  ['生物処理部',1.10,'aer','ろ材と散気設備による生物処理区画です。',['ろ材','散気管']],
+  ['処理水・移送部',.67,'sed','処理水をまとめて消毒側へ移送します。',['移送ポンプ']],
+  ['消毒槽',.40,'dis','薬剤筒を通して放流します。',['薬剤筒']]]},
+ xf5:{maker:'ダイキ系DXF資料',name:'XF-5',dims:'DXF外形・区画配置を教育用に正規化',source:'XF-5_T-0p.dxf',width:3.55,segments:[
+  ['前処理槽',1.10,'ana','DXFの外形・内部区画をもとにした前処理領域です。',['流入管','バッフル']],
+  ['ろ床処理槽',1.10,'ana','ろ材を使う生物処理領域です。',['ろ材']],
+  ['ばっ気・分離槽',.90,'aer','散気設備と分離機能を教材用に可視化しています。',['散気管','ブロワ配管']],
+  ['消毒・放流部',.45,'dis','薬剤筒と放流管を配置しています。',['薬剤筒']]]},
+ fkz2:{maker:'DXF資料',name:'FKZII-5',dims:'DXF外形・区画配置を教育用に正規化',source:'FKZ2_5_0_p.dxf',width:3.45,segments:[
+  ['流入・分離槽',1.05,'ana','流入負荷を受け止める分離区画です。',['流入管','バッフル']],
+  ['ろ床槽',.95,'ana','ろ材による生物処理区画です。',['ろ材']],
+  ['好気処理槽',.95,'aer','散気・接触処理設備を配置しています。',['接触材','散気管']],
+  ['沈殿・消毒部',.50,'dis','沈殿後に薬剤筒を通して放流します。',['沈殿部','薬剤筒']]]}
+};
+function model(){return MODELS[modelId]}function segs(){let x=0;return model().segments.map((s,i)=>{const o={i,name:s[0],w:s[1],type:s[2],desc:s[3],items:s[4],x0:x,x1:x+s[1]};x+=s[1];return o})}function total(){return model().width}
+function resize(){DPR=Math.min(2,devicePixelRatio||1);const r=cv.getBoundingClientRect();W=cv.width=Math.max(1,Math.round(r.width*DPR));H=cv.height=Math.max(1,Math.round(r.height*DPR))}addEventListener('resize',resize,{passive:true});resize();
+function fillMenus(){const sel=$('modelSelect'),grid=$('modelGrid');sel.innerHTML='';grid.innerHTML='';Object.entries(MODELS).forEach(([id,m])=>{const o=document.createElement('option');o.value=id;o.textContent=m.maker+' '+m.name;sel.appendChild(o);const b=document.createElement('button');b.className='modelChoice'+(id===modelId?' on':'');b.dataset.model=id;b.innerHTML='<b>'+m.maker+' '+m.name+'</b><small>'+m.dims+'</small>';grid.appendChild(b)});sel.value=modelId;grid.querySelectorAll('[data-model]').forEach(b=>b.onclick=()=>setModel(b.dataset.model))}
+function setModel(id){modelId=id;player={x:-1.1,z:1.5};discovered=new Set();$('modelSelect').value=id;document.querySelectorAll('[data-model]').forEach(b=>b.classList.toggle('on',b.dataset.model===id));updateHud(true)}
+function current(){if(player.x<0)return {i:-1,name:'流入管',desc:'家庭からの排水が浄化槽へ入る入口です。',items:['流入管'],pct:0};const ss=segs();for(const s of ss)if(player.x<s.x1)return {...s,pct:Math.round((s.i+1)/ss.length*100)};return {i:ss.length,name:'放流管',desc:'消毒済みの処理水が側溝などへ流れます。',items:['放流管'],pct:100}}
+function updateHud(force=false){const c=current(),m=model();if(!force&&updateHud.k===modelId+':'+c.i)return;updateHud.k=modelId+':'+c.i;$('maker').textContent=m.maker;$('zone').textContent=c.name;$('fill').style.width=c.pct+'%';$('found').textContent='発見 '+discovered.size+'/'+allItems().length;$('route').textContent=m.name+' / '+m.dims;renderMission()}
+function allItems(){return [...new Set(['流入管',...model().segments.flatMap(s=>s[4]),'放流管'])]}
+function renderMission(){const items=allItems(),next=items.find(x=>!discovered.has(x));$('mission').innerHTML='<b>ミッション</b><br>'+(next?'□ '+next+'を探そう':'✓ 全設備を発見！')}
+function openingFor(i,z){const patterns=[1.05,1.82,1.38,1.72];const center=patterns[i%patterns.length];return Math.abs(z-center)<.29}
+function canCross(px,nx,z){const ss=segs();for(let i=0;i<ss.length-1;i++){const w=ss[i].x1;if((px<w&&nx>=w)||(px>w&&nx<=w))if(!openingFor(i,z))return false}return true}
+function tryMove(nx,nz){const T=total(),r=.16;nx=Math.max(-1.7,Math.min(T+1.7,nx));nz=Math.max(.22+r,Math.min(2.78-r,nz));if(player.x>=0&&player.x<=T&&!canCross(player.x,nx,nz))nx=player.x;player.x=nx;player.z=nz}
+function control(dt){if(!playing||view==='section')return;const sp=(running?3.7:2.25)*dt,f=(keys.f?1:0)-(keys.b?1:0),side=(keys.r?1:0)-(keys.l?1:0);let dx=(Math.cos(yaw)*f-Math.sin(yaw)*side)*sp,dz=(Math.sin(yaw)*f+Math.cos(yaw)*side)*sp,l=Math.hypot(dx,dz);if(l>sp){dx*=sp/l;dz*=sp/l}tryMove(player.x+dx,player.z+dz)}
+function iso(x,y,z){const s=Math.min(W/(total()+3.9),H/5.1),cx=W*.5,cy=H*.62,dx=x-player.x,dz=z-player.z,ca=Math.cos(yaw),sa=Math.sin(yaw),rx=dx*ca+dz*sa,rz=-dx*sa+dz*ca;return[cx+rx*s,cy-rz*s*.57-(y-.7)*s*.60,s]}
+function poly(p,c,a=1){ctx.save();ctx.globalAlpha=a;ctx.fillStyle=c;ctx.beginPath();p.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));ctx.closePath();ctx.fill();ctx.strokeStyle='#1d343e';ctx.lineWidth=DPR;ctx.stroke();ctx.restore()}
+function cube(x0,x1,y0,y1,z0,z1,c,a=1){const A=iso(x0,y0,z0),B=iso(x1,y0,z0),C1=iso(x1,y0,z1),E=iso(x0,y1,z0),F=iso(x1,y1,z0),G=iso(x1,y1,z1),I=iso(x0,y1,z1);poly([E,F,G,I],c,a);poly([A,B,F,E],'#000',a*.25);poly([B,C1,G,F],'#fff',a*.07)}
+function color(t){return C[t]||C.pipe}
+function renderDive(){const T=total(),ss=segs(),dep=2.15;const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#18353d');g.addColorStop(.5,'#0a1820');g.addColorStop(1,'#03080b');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ // soil slab and rounded-looking FRP shell, no temple architecture
+ cube(-.35,T+.35,-.16,-.03,-.08,3.08,'#594634',1);cube(-.16,T+.16,-.02,.08,.08,2.92,'#c8c9c2',1);cube(-.13,T+.13,0,dep,.03,.13,C.frp,.93);cube(-.13,T+.13,0,dep,2.87,2.97,C.frp,.93);cube(-.13,-.03,0,dep,.13,2.87,C.frp,.96);cube(T+.03,T+.13,0,dep,.13,2.87,C.frp,.96);
+ ss.forEach((s,i)=>{cube(s.x0+.03,s.x1-.03,.08,dep*.69,.16,2.84,color(s.type),.48);if(i<ss.length-1){const w=s.x1,oc=[1.05,1.82,1.38,1.72][i%4];cube(w-.035,w+.035,0,dep,.14,oc-.31,C.frp,.96);cube(w-.035,w+.035,0,dep,oc+.31,2.86,C.frp,.96)}
+  // components per segment
+  if(s.type==='ana'){for(let x=s.x0+.16;x<s.x1-.08;x+=.24)cube(x,x+.055,.26,1.35,.48,2.52,C.media,.68)}
+  if(s.type==='aer'){for(let x=s.x0+.18;x<s.x1-.08;x+=.22)cube(x,x+.045,.30,1.42,.48,2.52,'#5f986b',.72);cube(s.x0+.12,s.x1-.12,.12,.19,1.34,1.66,'#24333a',1)}
+  if(s.type==='sed')cube(s.x0+.12,s.x1-.12,.08,.56,.52,2.48,'#735d43',.70);
+  if(s.type==='dis')cube(s.x0+.10,s.x0+.25,.30,1.72,1.38,1.62,'#e7eef0',.94);
+  const mx=(s.x0+s.x1)/2;cube(mx-.25,mx+.25,dep+.03,dep+.10,1.04,1.96,'#555d5e',1);cube(mx-.20,mx+.20,dep+.10,dep+.16,1.10,1.90,'#929998',1)
+ });
+ // inlet/outlet pipes
+ cube(-1.20,.05,1.42,1.58,1.42,1.58,'#b8c1c1',1);cube(T-.05,T+1.20,1.28,1.43,1.42,1.58,'#b8c1c1',1);
+ // bubbles only in aerobic zones
+ const t=performance.now()/650;ss.filter(s=>s.type==='aer').forEach(s=>{for(let i=0;i<10;i++){const x=s.x0+.1+((i*.19)%Math.max(.15,s.w-.2)),y=.24+((t+i*.17)%1.15),z=1.05+.75*Math.sin(i*1.9);const p=iso(x,y,z);ctx.strokeStyle='#a6f3ff';ctx.globalAlpha=.65;ctx.beginPath();ctx.arc(p[0],p[1],(2+i%3)*DPR,0,Math.PI*2);ctx.stroke()}ctx.globalAlpha=1});
+ const p=iso(player.x,.72,player.z);ctx.fillStyle='#ff6868';ctx.beginPath();ctx.arc(p[0],p[1],7*DPR,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff';ctx.stroke();$('mini').textContent=`${model().name} x:${player.x.toFixed(1)} z:${player.z.toFixed(1)}`}
+function renderSection(){const m=model(),ss=segs(),T=total(),dep=2.15;ctx.fillStyle='#071218';ctx.fillRect(0,0,W,H);const pad=38*DPR,s=Math.min((W-pad*2)/T,(H-pad*2)/(dep+.8)),ox=(W-T*s)/2,oy=(H-(dep+.8)*s)/2+dep*s,X=x=>ox+x*s,Y=y=>oy-y*s;ctx.strokeStyle=C.frp;ctx.lineWidth=3*DPR;ctx.strokeRect(X(0),Y(dep),T*s,dep*s);ss.forEach((q,i)=>{ctx.globalAlpha=.55;ctx.fillStyle=color(q.type);ctx.fillRect(X(q.x0),Y(dep*.69),q.w*s,dep*.69*s);ctx.globalAlpha=1;if(i<ss.length-1){ctx.fillStyle=C.frp;ctx.fillRect(X(q.x1)-2*DPR,Y(dep),4*DPR,dep*s);const oc=[1.05,1.82,1.38,1.72][i%4];ctx.fillStyle=C.pipe;ctx.fillRect(X(q.x1)-5*DPR,Y(oc+.29),10*DPR,.58*s)}ctx.fillStyle='#eff9fb';ctx.textAlign='center';ctx.font=`bold ${Math.max(9,12*DPR)}px sans-serif`;ctx.fillText(q.name,X((q.x0+q.x1)/2),Y(dep)-9*DPR)});ctx.fillStyle='#ff6868';ctx.beginPath();ctx.arc(X(Math.max(0,Math.min(T,player.x))),Y(.72),7*DPR,0,Math.PI*2);ctx.fill();ctx.fillStyle='#a9c0c8';ctx.textAlign='left';ctx.font=12*DPR+'px sans-serif';ctx.fillText(m.maker+' '+m.name+' / '+m.dims,pad,24*DPR);$('mini').textContent='断面図モード'}
+function interact(){const c=current(),items=c.items||[];const item=items.find(x=>!discovered.has(x))||items[0]||c.name;if(item)discovered.add(item);cardOpen=true;$('code').textContent=c.i<0?'INLET':c.pct===100?'OUTFALL':'CHAMBER '+(c.i+1);$('ct').textContent=item||c.name;$('cb').textContent=c.desc+(items.length?' この区画で確認できる設備: '+items.join('・')+'。':'');$('source').textContent='資料: '+model().source+' / '+model().dims+' ※ゲーム内は通行性確保のため開口部などを拡大。';$('card').classList.add('show');updateHud(true)}
+function closeCard(){cardOpen=false;$('card').classList.remove('show')}
+function loop(ts){const dt=Math.min(.05,(ts-last)/1000||0);last=ts;control(dt);updateHud();view==='section'?renderSection():renderDive();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+addEventListener('keydown',e=>{if(e.key==='Shift')running=true;if(e.key==='e'||e.key==='E')interact();if(e.key==='q'||e.key==='Q')toggleView();if(e.key==='m'||e.key==='M')$('start').classList.remove('hide');const k={w:'f',W:'f',ArrowUp:'f',s:'b',S:'b',ArrowDown:'b',a:'l',A:'l',ArrowLeft:'l',d:'r',D:'r',ArrowRight:'r'}[e.key];if(k){keys[k]=1;e.preventDefault()}});addEventListener('keyup',e=>{if(e.key==='Shift')running=false;const k={w:'f',W:'f',ArrowUp:'f',s:'b',S:'b',ArrowDown:'b',a:'l',A:'l',ArrowLeft:'l',d:'r',D:'r',ArrowRight:'r'}[e.key];if(k){keys[k]=0;e.preventDefault()}});
+document.querySelectorAll('[data-k]').forEach(b=>{const k=b.dataset.k;b.onpointerdown=e=>{keys[k]=1;b.setPointerCapture(e.pointerId);e.preventDefault()};['pointerup','pointercancel','pointerleave'].forEach(n=>b.addEventListener(n,()=>keys[k]=0))});
+cv.onpointerdown=e=>{drag={x:e.clientX};cv.setPointerCapture(e.pointerId)};cv.onpointermove=e=>{if(drag&&view==='dive'){yaw+=(e.clientX-drag.x)*.006;drag.x=e.clientX}};cv.onpointerup=cv.onpointercancel=()=>drag=null;
+function toggleView(){view=view==='dive'?'section':'dive';$('viewBtn').textContent=view==='dive'?'断面':'3D';$('mapBtn').textContent=view==='dive'?'俯瞰\nQ':'3D\nQ';$('viewBtn').classList.toggle('on',view==='section')}
+$('actBtn').onclick=interact;$('close').onclick=closeCard;$('viewBtn').onclick=toggleView;$('mapBtn').onclick=toggleView;$('menuBtn').onclick=()=>$('start').classList.remove('hide');$('modelSelect').onchange=e=>setModel(e.target.value);
+function beginGame(e){if(e){e.preventDefault();e.stopPropagation()}playing=true;const overlay=$('start');overlay.classList.add('hide');overlay.style.display='none';closeCard();updateHud(true);cv.focus?.()}
+const sb=$('startBtn');sb.addEventListener('click',beginGame,{passive:false});sb.addEventListener('touchend',beginGame,{passive:false});
+fillMenus();setModel(modelId);updateHud(true);
+})();
+</script>
+</body></html>
