@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#79d7ee">
+<title>フジクリーン CB-5 浄化槽探検 — 実構造追体験版</title>
+<style>
+:root{--sky:#a9eaff;--deep:#15516a;--panel:#0b455bdc;--line:#dffaff;--ink:#fff;--muted:#cceaf1;--orange:#ff9f2e;--green:#62cf8b;--blue:#55c9ed;--yellow:#ffd85a;--purple:#b98cff;--brown:#8e6b45}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--sky);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink)}button{font:inherit;color:inherit}canvas{display:block;width:100%;height:100%;touch-action:none}.hidden{display:none!important}
+#app{position:fixed;inset:0;background:linear-gradient(#9fe7fa,#d9f8ff)}
+#hud{position:fixed;inset:0;z-index:10;pointer-events:none}.top{display:flex;gap:7px;padding:calc(env(safe-area-inset-top) + 8px) 10px 8px;background:linear-gradient(#0b5067e8,#0b506700);align-items:center}.pill{padding:7px 10px;border:1px solid #d9f8ff;background:#145d73dd;border-radius:999px;font-size:12px;box-shadow:0 3px 12px #174c5d44}.place{font-weight:900;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.progress{position:absolute;left:10px;right:10px;top:calc(env(safe-area-inset-top) + 49px);height:7px;background:#15526655;border:1px solid #fff9;border-radius:99px;overflow:hidden}.progress i{display:block;width:0;height:100%;background:linear-gradient(90deg,#a27142,#6fd5ee,#87db9e,#ffd96e,#c99fff);transition:.3s}.modebar{position:fixed;top:calc(env(safe-area-inset-top) + 66px);right:10px;z-index:16;display:flex;gap:6px}.modebar button,#menuBtn{pointer-events:auto;border:1px solid #dffaff;background:#145d73e8;border-radius:10px;padding:8px 10px;font-weight:800;box-shadow:0 4px 16px #12556a44}.modebar button.on{background:#fff;color:#19596c}.caption{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 72px);transform:translateX(-50%);z-index:11;background:#fffef0e8;color:#1b5c6d;border:2px solid #64bfd1;border-radius:13px;padding:7px 13px;font-weight:950;font-size:13px;box-shadow:0 7px 22px #145a6c33;white-space:nowrap}.tip{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 116px);transform:translateX(-50%);z-index:11;background:#145d73e8;border:1px solid #dffaff;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:800;white-space:nowrap;opacity:0;transition:.2s}.tip.show{opacity:1}
+#menuBtn{position:fixed;right:10px;top:calc(env(safe-area-inset-top) + 8px);z-index:18}
+#stick{position:fixed;left:calc(env(safe-area-inset-left) + 17px);bottom:calc(env(safe-area-inset-bottom) + 18px);width:138px;height:138px;border-radius:50%;border:2px solid #fff9;background:radial-gradient(circle,#fff2 0 38%,#17647a66 40% 68%,#fff4 70%);z-index:18;touch-action:none;box-shadow:inset 0 0 25px #0c4a5e44,0 8px 26px #14526844}#knob{position:absolute;left:42px;top:42px;width:54px;height:54px;border-radius:50%;background:linear-gradient(145deg,#efffff,#6dc8d9);border:2px solid #fff;box-shadow:0 5px 16px #0e4e6088;transform:translate(0,0)}
+#inspectBtn{position:fixed;right:calc(env(safe-area-inset-right) + 18px);bottom:calc(env(safe-area-inset-bottom) + 27px);width:76px;height:76px;border-radius:50%;border:2px solid #fff;background:linear-gradient(145deg,#4ce5ee,#177d95);z-index:18;font-weight:900;box-shadow:0 9px 28px #14566d77}.mobileHint{position:fixed;right:15px;bottom:112px;z-index:12;color:#155468;font-size:11px;text-align:right;font-weight:800}
+.overlay{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:18px;background:linear-gradient(160deg,#8fdef0fa,#327d96fa)}.sheet{width:min(680px,100%);max-height:94vh;overflow:auto;background:#114f65eb;border:1px solid #d9f8ff;border-radius:22px;padding:22px;box-shadow:0 30px 90px #06435e88}.logo{font-size:clamp(28px,7vw,52px);font-weight:950;margin:0;letter-spacing:.03em}.sub{margin:5px 0 16px;color:#d9f5fa}.card{border:1px solid #bdebf4;background:#1a647ae6;border-radius:14px;padding:13px;margin:11px 0;line-height:1.65}.card b{display:block;color:#fff}.card small{color:#d8eff4}.main{width:100%;border:1px solid #fff;background:linear-gradient(#32bfd3,#197f98);border-radius:14px;padding:14px;font-size:18px;font-weight:950}.rowBtns{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.secondary{border:1px solid #beeaf3;background:#155c71;border-radius:11px;padding:10px;font-weight:800}.tiny{font-size:11px;color:#d1eaf0;line-height:1.6}.dialog{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 12px);z-index:30;max-width:700px;margin:auto;background:linear-gradient(#145c72fa,#0b455bfa);border:1px solid #d9f8ff;border-left:5px solid #ffd863;border-radius:17px;padding:15px;box-shadow:0 20px 60px #07394f99}.dialog h2{margin:0 38px 5px 0;font-size:20px}.dialog p{margin:0;color:#d6edf3;line-height:1.75;font-size:14px}.dialog .close{position:absolute;right:8px;top:7px;width:32px;height:32px;border:0;border-radius:50%;background:#fff2;font-size:20px}.detail{margin-top:9px;padding-top:9px;border-top:1px solid #ffffff44}.menuSheet{width:min(760px,100%)}.tabs{display:flex;gap:6px;position:sticky;top:-22px;background:#114f65f4;padding:4px 0 10px;z-index:2}.tabs button{flex:1}.tabs button.on{background:#fff;color:#15566c}.sectionTitle{font-size:22px;margin:8px 0 12px}.specGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px}.spec{background:#0e4356;border:1px solid #8ed7e5;border-radius:12px;padding:10px}.spec b{display:block;font-size:16px}.spec small{color:#cbe8ee}.mission{display:flex;gap:10px;padding:10px 2px;border-bottom:1px solid #ffffff33}.check{width:22px;height:22px;border:1px solid #dffaff;border-radius:6px;flex:none;display:grid;place-items:center}.done .check{background:#53bd7f}.done .check:after{content:"✓"}.legend{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.legend div{border:1px solid #ffffff55;border-radius:10px;padding:8px;font-size:12px}.sw{display:inline-block;width:13px;height:13px;border-radius:3px;margin-right:6px;vertical-align:-2px}.warning{border-left:4px solid #ffcf5d;padding:9px 11px;background:#6b542f55;border-radius:8px;color:#fff2c5}.error{position:fixed;left:6px;right:6px;top:6px;z-index:99;background:#661313;color:#fff;border:2px solid #ff7777;padding:10px;font:12px monospace;white-space:pre-wrap;max-height:45vh;overflow:auto}
+@media(pointer:fine){#stick,#inspectBtn,.mobileHint{opacity:.65}}@media(max-width:520px){.caption{top:calc(env(safe-area-inset-top) + 100px)}.modebar{top:calc(env(safe-area-inset-top) + 64px);left:10px;right:auto}.modebar button{padding:7px 8px;font-size:11px}.top{padding-right:54px}.pill:nth-child(1){display:none}}
+</style>
+</head>
+<body>
+<div id="app"><canvas id="cv"></canvas></div>
+<div id="hud" class="hidden"><div class="top"><span class="pill">CB-5 実構造版</span><span class="pill place" id="place">流入管</span><span class="pill" id="found">確認 0/9</span></div><div class="progress"><i id="prog"></i></div></div>
+<div class="modebar hidden" id="modebar"><button data-mode="follow" class="on">追体験</button><button data-mode="plan">平面</button><button data-mode="section">断面</button></div>
+<div id="caption" class="caption hidden">流入管</div><div id="tip" class="tip">流れに沿って進んでいます</div>
+<button id="menuBtn" class="hidden">☰</button>
+<div id="stick" class="hidden"><div id="knob"></div></div><button id="inspectBtn" class="hidden">調べる</button><div class="mobileHint hidden">右側ドラッグ：視点<br>左スティック：流れの速度</div>
+
+<div id="start" class="overlay"><div class="sheet"><h1 class="logo">CB-5 浄化槽探検</h1><p class="sub">実機の処理工程を、汚れの視点で追体験</p><div class="card"><b>フジクリーン CB型 5人槽</b><small>流入管から始まり、流入バッフル、沈殿分離槽、ピークカット部、嫌気ろ床槽、接触ろ床槽、処理水槽、放流エアリフト、薬剤筒、消毒槽、放流管まで、実機資料の構成に沿って進みます。</small></div><div class="card"><b>迷路ではありません</b><small>プレイヤーは水中の汚れのかけらです。実際の流向に沿って移動し、沈殿・嫌気処理・接触ろ床処理・消毒の働きを観察します。平面図と断面図へいつでも切り替えられます。</small></div><button id="startBtn" class="main">流入管から開始</button><div class="rowBtns"><button id="structure0" class="secondary">構造資料</button><button id="settings0" class="secondary">操作設定</button></div><p class="tiny">外形・容量・機器配置はCB-5の認定図・維持管理要領書・製品資料を基準にしています。ゲーム内では内部を観察できるよう、視点と表示スケールのみ教育用に調整しています。実際の浄化槽内へ入ることは危険です。</p></div></div>
+
+<div id="dialog" class="dialog hidden"><button class="close">×</button><h2 id="dlgTitle"></h2><p id="dlgBody"></p><p id="dlgDetail" class="detail"></p></div>
+<div id="menu" class="overlay hidden"><div class="sheet menuSheet"><div class="tabs"><button class="secondary on" data-tab="mission">確認項目</button><button class="secondary" data-tab="structure">構造</button><button class="secondary" data-tab="settings">設定</button></div><div id="tab"></div><div class="rowBtns"><button id="resume" class="main">探検へ戻る</button><button id="restart" class="secondary">最初から</button></div></div></div>
+
+<script>
+(()=>{'use strict';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+window.addEventListener('error',e=>{const d=document.createElement('div');d.className='error';d.textContent='JavaScript error: '+e.message+'\n'+(e.filename||'')+':'+(e.lineno||'');document.body.appendChild(d)});
+const cv=$('#cv'),ctx=cv.getContext('2d');let W=1,H=1,DPR=1,last=0;
+function resize(){DPR=Math.min(2,devicePixelRatio||1);W=cv.width=Math.max(1,innerWidth*DPR|0);H=cv.height=Math.max(1,innerHeight*DPR|0)}addEventListener('resize',resize,{passive:true});resize();
+
+// CB-5 5人槽：外形 1690×1110×1220mm、水深880mm、ピークカット140mm。
+// ゲーム座標は 100mm = 1 unit。機器の相対配置は認定図の平面・A-A/B-B/C-C断面を基準にした。
+const tank={x:0,y:0,w:16.9,h:11.1,water:8.8,peak:1.4};
+const zones=[
+ {id:'inlet',name:'流入管 φ100',from:0,to:.08,color:'#8a6945',short:'生活排水がCB-5へ入ります。',detail:'流入管底は本体天端から260mm。流入直後に流入バッフルへ入り、急な流れを弱めます。'},
+ {id:'baffle',name:'流入バッフル',from:.08,to:.16,color:'#79d2e5',short:'流入水を下向きに導く実機のバッフルです。',detail:'流入口直後の左端に配置され、短絡流を抑えながら沈殿分離槽へ導きます。'},
+ {id:'sed',name:'沈殿分離槽',from:.16,to:.34,color:'#7ecb8a',short:'固形物と油脂を沈降・浮上分離します。',detail:'CB-5有効容量0.290m³。重い固形物は底部へ、油脂やスカムは水面へ分離されます。'},
+ {id:'peak',name:'ピークカット部',from:.34,to:.46,color:'#83d4a1',short:'流入量のピークを水位変化で吸収します。',detail:'CB-5有効容量0.191m³。水位差を利用して浴槽排水などの流量変動を緩和します。'},
+ {id:'ana',name:'嫌気ろ床槽',from:.46,to:.64,color:'#6fc98d',short:'網様円筒状ろ材で嫌気処理します。',detail:'CB-5有効容量0.546m³。平均外径φ74×高さ73mmの網様円筒状ろ材が充填され、固形物分離と嫌気性微生物による分解・脱窒が進みます。'},
+ {id:'contact',name:'接触ろ床槽',from:.64,to:.82,color:'#55c9ed',short:'散気と接触ろ材で有機物を分解します。',detail:'CB-5有効容量0.238m³。φ100×高さ100mmの網様ロール状ろ材と散気管を備え、好気分解・硝化とSS除去を行います。'},
+ {id:'treated',name:'処理水槽',from:.82,to:.90,color:'#6bbde7',short:'処理水を一時貯留します。',detail:'CB-5有効容量0.119m³。接触ろ床処理後の水を一時的に貯留し、放流エアリフトポンプへ送ります。'},
+ {id:'disinfect',name:'薬剤筒・消毒槽',from:.90,to:.97,color:'#be91ef',short:'塩素剤と接触させて消毒します。',detail:'処理水は放流エアリフトで薬剤筒を経て消毒槽へ送られます。CB-5消毒槽有効容量0.011m³。'},
+ {id:'outfall',name:'放流管 φ100',from:.97,to:1,color:'#ffd760',short:'消毒後の処理水を放流します。',detail:'放流管底は本体天端から270mm。処理された水が槽外へ流れます。'}
+];
+const checks=['baffle','sed','peak','ana','anaMedia','diffuser','contactMedia','airlift','chemical'];
+const checkNames={baffle:'流入バッフル',sed:'沈殿分離槽',peak:'ピークカット部',ana:'嫌気ろ床槽',anaMedia:'嫌気ろ材',diffuser:'散気管と曝気',contactMedia:'接触ろ材',airlift:'循環・放流エアリフト',chemical:'薬剤筒・消毒槽'};
+
+// 実流路の概念パス。x/y=平面、z=水深方向(0底〜8.8水面)。
+const path=[
+ {x:-3.0,y:5.55,z:7.1,t:'inlet'},{x:-.1,y:5.55,z:7.1,t:'inlet'},
+ {x:.8,y:5.55,z:7.0,t:'baffle'},{x:1.25,y:5.55,z:3.0,t:'baffle'},
+ {x:2.0,y:3.5,z:2.4,t:'sed'},{x:3.8,y:2.0,z:2.0,t:'sed'},{x:4.9,y:5.5,z:3.2,t:'sed'},
+ {x:5.4,y:8.6,z:7.7,t:'peak'},{x:6.2,y:8.4,z:6.6,t:'peak'},
+ {x:6.3,y:5.8,z:6.1,t:'ana'},{x:6.9,y:3.0,z:2.0,t:'ana'},{x:8.5,y:2.1,z:1.6,t:'ana'},{x:9.8,y:4.2,z:3.6,t:'ana'},{x:10.2,y:6.0,z:6.5,t:'ana'},
+ {x:10.75,y:6.0,z:2.1,t:'contact'},{x:11.8,y:5.5,z:1.2,t:'contact'},{x:12.1,y:3.2,z:2.0,t:'contact'},{x:12.4,y:4.7,z:5.8,t:'contact'},{x:12.8,y:7.0,z:7.2,t:'contact'},
+ {x:14.1,y:6.6,z:6.8,t:'treated'},{x:14.4,y:5.6,z:2.0,t:'treated'},{x:14.8,y:4.8,z:7.4,t:'treated'},
+ {x:15.3,y:3.8,z:7.7,t:'disinfect'},{x:15.7,y:4.1,z:7.5,t:'disinfect'},{x:16.15,y:5.4,z:7.1,t:'outfall'},{x:19.0,y:5.4,z:7.1,t:'outfall'}
+];
+function segLen(a,b){return Math.hypot(b.x-a.x,b.y-a.y,(b.z-a.z)*.45)}const lens=[];let total=0;for(let i=0;i<path.length-1;i++){const l=segLen(path[i],path[i+1]);lens.push(l);total+=l}
+function sample(p){p=Math.max(0,Math.min(1,p));let d=p*total,i=0;while(i<lens.length-1&&d>lens[i]){d-=lens[i];i++}const a=path[i],b=path[i+1],u=d/lens[i];return{x:a.x+(b.x-a.x)*u,y:a.y+(b.y-a.y)*u,z:a.z+(b.z-a.z)*u,t:u<.5?a.t:b.t,angle:Math.atan2(b.y-a.y,b.x-a.x)}}
+const state={playing:false,paused:false,mode:'follow',p:0,speed:.000038,targetSpeed:0,offset:0,viewAngle:-.12,zoom:1,found:new Set(),zone:'inlet',auto:true};
+let joyY=0,joyTargetY=0,drag=null;
+
+function zoneAt(p){return zones.find(z=>p>=z.from&&p<z.to)||zones[zones.length-1]}
+function updateHUD(){const z=zoneAt(state.p);if(z.id!==state.zone){state.zone=z.id;showNotice(z.name);autoCheck(z.id)}$('#place').textContent=z.name;$('#caption').textContent=z.name;$('#prog').style.width=(state.p*100).toFixed(1)+'%';$('#found').textContent=`確認 ${state.found.size}/${checks.length}`}
+function autoCheck(id){if(['baffle','sed','peak','ana'].includes(id))discover(id)}
+function discover(id){if(checks.includes(id)&&!state.found.has(id)){state.found.add(id);showNotice(checkNames[id]+'を確認');save()}}
+let noticeTimer=0;function showNotice(s){$('#tip').textContent=s;$('#tip').classList.add('show');clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>$('#tip').classList.remove('show'),1700)}
+
+function iso(x,y,z,cam){const scale=Math.min(W/24,H/15)*state.zoom;const ca=Math.cos(cam),sa=Math.sin(cam);const rx=(x-7.8)*ca+(y-5.55)*sa, ry=-(x-7.8)*sa+(y-5.55)*ca;return[W*.5+rx*scale,H*.59+ry*scale*.46-(z-4.3)*scale*.56,scale]}
+function poly(pts,fill,stroke='#1e6675',alpha=1){ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle=fill;ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=1.2*DPR;ctx.stroke();ctx.restore()}
+function box(x0,x1,y0,y1,z0,z1,color,alpha=.7,cam=state.viewAngle){const A=iso(x0,y0,z0,cam),B=iso(x1,y0,z0,cam),C=iso(x1,y1,z0,cam),D=iso(x0,y1,z0,cam),E=iso(x0,y0,z1,cam),F=iso(x1,y0,z1,cam),G=iso(x1,y1,z1,cam),I=iso(x0,y1,z1,cam);poly([A,B,F,E],color,'#245f6c',alpha);poly([B,C,G,F],color,'#245f6c',alpha*.82);poly([E,F,G,I],color,'#245f6c',alpha*.95)}
+function line3(points,color,width=2,dash=[]){ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width*DPR;ctx.setLineDash(dash.map(v=>v*DPR));ctx.beginPath();points.forEach((p,i)=>{const q=iso(p.x,p.y,p.z,state.viewAngle);i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1])});ctx.stroke();ctx.restore()}
+function text3(s,x,y,z,color='#174f61',size=12){const p=iso(x,y,z,state.viewAngle);ctx.save();ctx.textAlign='center';ctx.fillStyle=color;ctx.font=`900 ${size*DPR}px sans-serif`;ctx.shadowColor='#fff';ctx.shadowBlur=4*DPR;ctx.fillText(s,p[0],p[1]);ctx.restore()}
+
+function renderFollow(){ctx.fillStyle='#c9f4ff';ctx.fillRect(0,0,W,H);drawTank(true);drawPlayer();drawForeground()}
+function drawTank(cutaway){const cam=state.viewAngle;
+ // ground shadow and shell
+ box(-.1,17,0,11.1,-.35,0,'#8bc7b2',.48,cam);
+ // water body sections
+ box(.1,5.2,.2,10.9,.1,8.8,'#86d9bc',.29,cam);box(5.2,10.65,.2,10.9,.1,8.8,'#77d2a0',.27,cam);box(10.65,13.45,.2,10.9,.1,8.8,'#64cef0',.28,cam);box(13.45,15.15,.2,10.9,.1,8.8,'#7bccea',.27,cam);box(15.15,16.7,2.6,8.6,.1,8.8,'#c49bef',.25,cam);
+ // FRP outer wall bottom/back/right; front omitted as cutaway
+ box(-.05,17.0,-.05,.18,0,10.4,'#f0e7c6',.72,cam);box(-.05,.18,0,11.1,0,10.4,'#f0e7c6',.74,cam);box(16.72,17.0,0,11.1,0,10.4,'#f0e7c6',.76,cam);box(-.05,17.0,10.92,11.15,0,10.4,'#f0e7c6',.6,cam);
+ // partitions from official layout
+ box(5.02,5.22,.2,10.9,.1,8.35,'#f3ebcf',.82,cam); // sediment/anaerobic partition with upper peak region
+ box(10.48,10.68,.2,10.9,.1,8.25,'#f3ebcf',.82,cam);
+ box(13.25,13.45,.2,10.9,.1,8.5,'#f3ebcf',.78,cam);
+ box(15.0,15.2,2.5,8.7,.1,8.6,'#f3ebcf',.78,cam);
+ // inlet/outlet pipes
+ box(-3,.2,5.05,6.05,6.6,7.6,'#dbe9e7',.9,cam);box(16.7,19.5,4.95,5.95,6.6,7.6,'#dbe9e7',.9,cam);
+ // inlet baffle
+ box(.65,1.55,4.4,6.7,2.3,7.6,'#d4e7e8',.78,cam);box(.65,1.55,4.4,6.7,2.0,2.35,'#d4e7e8',.78,cam);
+ // peak-cut upper open region label / ledge
+ box(4.8,7.2,7.7,10.5,7.35,7.6,'#d7edd9',.62,cam);
+ // anaerobic media grid: cylindrical mesh pieces represented as vertical lattice columns
+ for(let x=5.8;x<10.0;x+=.58)for(let y=.9;y<9.9;y+=.72){if(((x*10+y*10)|0)%3===0)continue;box(x,x+.34,y,y+.38,1.2,5.9,'#5ca778',.46,cam)}
+ // contact media rolls, two vertical banks
+ for(let x=10.95;x<13.15;x+=.48)for(let y=1.0;y<10.0;y+=.62){box(x,x+.28,y,y+.34,2.1,6.9,'#3e97aa',.5,cam)}
+ // diffuser at bottom and air pipes
+ box(11.1,12.9,4.9,5.3,.65,.95,'#2f6670',.92,cam);line3([{x:12,y:5.1,z:.9},{x:12,y:5.1,z:8.7},{x:14.8,y:5.1,z:8.7}],'#d5f8ff',3);
+ // circulation airlift and discharge airlift
+ box(13.55,13.88,3.25,3.62,.55,8.1,'#e8f5f2',.75,cam);box(14.48,14.82,4.65,5.0,.55,8.2,'#e8f5f2',.8,cam);
+ // chemical tube + disinfection channel
+ box(15.25,15.72,3.3,3.78,6.3,9.1,'#fff2be',.9,cam);box(15.2,16.5,3.0,8.2,.4,1.0,'#ab82d8',.5,cam);
+ // flow path
+ line3(path,'#fff38b',4,[8,5]);
+ // bubbles only in contact bed / airlift
+ drawBubbles();
+ // labels
+ text3('沈殿分離槽',2.8,8.8,9.4,'#20623d',13);text3('ピークカット部',5.9,9.8,8.5,'#21683f',11);text3('嫌気ろ床槽',8.1,8.6,9.4,'#14623b',13);text3('接触ろ床槽',12.0,8.7,9.4,'#146a82',13);text3('処理水槽',14.2,8.6,9.4,'#216a88',12);text3('消毒槽',15.8,7.7,9.4,'#70459b',12);
+ // dimensions in plan-ish style
+ if(state.mode!=='follow'){line3([{x:0,y:-.7,z:0},{x:16.9,y:-.7,z:0}],'#245b69',1,[4,3]);text3('1690 mm',8.45,-.8,.1,'#1b5666',11);line3([{x:-.8,y:0,z:0},{x:-.8,y:11.1,z:0}],'#245b69',1,[4,3]);text3('1110 mm',-.9,5.55,.2,'#1b5666',11)}
+ }
+function drawBubbles(){const t=performance.now()/1000;ctx.save();for(let i=0;i<70;i++){const x=10.9+(i%9)*.26+Math.sin(i*1.7)*.08,y=2.0+((i*1.13)%7.2),z=.8+((t*(.75+(i%5)*.12)+i*.47)%7.5);const p=iso(x,y,z,state.viewAngle),r=(1.5+(i%4)*.7)*DPR;ctx.strokeStyle=`rgba(238,255,255,${.32+(i%3)*.13})`;ctx.lineWidth=1.2*DPR;ctx.beginPath();ctx.arc(p[0],p[1],r,0,Math.PI*2);ctx.stroke()}for(let i=0;i<18;i++){const z=.8+((t*1.1+i*.53)%7.4),p=iso(14.63,4.82,z,state.viewAngle);ctx.strokeStyle='rgba(255,255,255,.65)';ctx.beginPath();ctx.arc(p[0],p[1],(2+i%3)*DPR,0,Math.PI*2);ctx.stroke()}ctx.restore()}
+function drawPlayer(){const p=sample(state.p),q=iso(p.x,p.y,p.z,state.viewAngle);ctx.save();ctx.translate(q[0],q[1]);const pulse=1+Math.sin(performance.now()/180)*.12;ctx.scale(pulse,pulse);ctx.fillStyle='#7a4c2b';ctx.strokeStyle='#fff';ctx.lineWidth=2*DPR;ctx.beginPath();ctx.arc(0,0,7*DPR,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-2*DPR,-1*DPR,1.3*DPR,0,Math.PI*2);ctx.arc(2*DPR,-1*DPR,1.3*DPR,0,Math.PI*2);ctx.fill();ctx.restore();
+ // camera target highlight
+ ctx.save();ctx.fillStyle='#174f61';ctx.font=`900 ${11*DPR}px sans-serif`;ctx.textAlign='center';ctx.fillText('あなた（汚れのかけら）',q[0],q[1]-14*DPR);ctx.restore()}
+function drawForeground(){const z=zoneAt(state.p);ctx.save();ctx.fillStyle='rgba(255,255,255,.88)';ctx.strokeStyle='#4eb7ca';ctx.lineWidth=2*DPR;const w=Math.min(W*.78,520*DPR),h=48*DPR,x=(W-w)/2,y=H-85*DPR;roundRect(x,y,w,h,13*DPR);ctx.fill();ctx.stroke();ctx.fillStyle='#16576a';ctx.font=`900 ${13*DPR}px sans-serif`;ctx.textAlign='center';ctx.fillText(z.short,W/2,y+29*DPR);ctx.restore()}
+function roundRect(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+
+function renderPlan(){ctx.fillStyle='#effcff';ctx.fillRect(0,0,W,H);state.viewAngle=0;drawTank(false);drawPlayer();drawPlanLegend()}
+function drawPlanLegend(){ctx.save();const x=12*DPR,y=H-150*DPR,w=Math.min(430*DPR,W-24*DPR),h=136*DPR;ctx.fillStyle='#ffffffea';ctx.strokeStyle='#57afc0';ctx.lineWidth=1.5*DPR;roundRect(x,y,w,h,12*DPR);ctx.fill();ctx.stroke();ctx.fillStyle='#18586a';ctx.font=`900 ${12*DPR}px sans-serif`;ctx.fillText('CB-5 平面構造：左から流入、右から放流',x+12*DPR,y+21*DPR);ctx.font=`${10.5*DPR}px sans-serif`;['流入バッフルは流入口直後','嫌気ろ材は中央左〜中央部','接触ろ材・散気管は右側処理部','処理水は放流AP→薬剤筒→消毒槽'].forEach((s,i)=>ctx.fillText('・'+s,x+12*DPR,y+(43+i*21)*DPR));ctx.restore()}
+function renderSection(){ctx.fillStyle='#eefcff';ctx.fillRect(0,0,W,H);drawSection2D();drawPlayerSection()}
+function drawSection2D(){const m=40*DPR,usableW=W-m*2,scale=Math.min(usableW/(19.5),H*.67/12.2),ox=(W-19.5*scale)/2,base=H*.78,X=x=>ox+x*scale,Y=z=>base-z*scale;
+ // shell outline and water
+ ctx.fillStyle='#d8f3fa';ctx.strokeStyle='#456f77';ctx.lineWidth=2*DPR;ctx.beginPath();ctx.roundRect(X(0),Y(10.4),16.9*scale,10.4*scale,1.1*scale);ctx.fill();ctx.stroke();ctx.fillStyle='rgba(75,194,230,.30)';ctx.fillRect(X(.2),Y(8.8),16.5*scale,8.6*scale);
+ // partitions
+ [5.2,10.65,13.45,15.15].forEach(x=>{ctx.fillStyle='#eee5c5';ctx.fillRect(X(x)-2*DPR,Y(8.4),4*DPR,8.4*scale)});
+ // baffle
+ ctx.fillStyle='#cadfe0';ctx.fillRect(X(.7),Y(7.6),.9*scale,5.5*scale);
+ // media
+ ctx.fillStyle='rgba(50,135,82,.54)';ctx.fillRect(X(5.8),Y(6.0),4.1*scale,4.9*scale);ctx.fillStyle='rgba(33,139,165,.55)';ctx.fillRect(X(10.9),Y(6.9),2.2*scale,5.8*scale);
+ // pipes/airlifts/chemical
+ ctx.fillStyle='#315f67';ctx.fillRect(X(11.1),Y(.95),1.8*scale,.3*scale);ctx.fillStyle='#edf8f5';ctx.fillRect(X(13.6),Y(8.1),.3*scale,7.5*scale);ctx.fillRect(X(14.5),Y(8.2),.3*scale,7.6*scale);ctx.fillStyle='#ffe89c';ctx.fillRect(X(15.3),Y(9.0),.45*scale,2.7*scale);
+ // water level lines
+ ctx.strokeStyle='#1e7c9a';ctx.setLineDash([7*DPR,4*DPR]);ctx.beginPath();ctx.moveTo(X(.2),Y(8.8));ctx.lineTo(X(16.7),Y(8.8));ctx.stroke();ctx.setLineDash([]);
+ // flow arrows/path projected x-z
+ ctx.strokeStyle='#f3bd20';ctx.lineWidth=4*DPR;ctx.setLineDash([9*DPR,5*DPR]);ctx.beginPath();path.forEach((p,i)=>i?ctx.lineTo(X(p.x+3),Y(p.z)):ctx.moveTo(X(p.x+3),Y(p.z)));ctx.stroke();ctx.setLineDash([]);
+ // bubbles
+ const t=performance.now()/1000;for(let i=0;i<40;i++){const x=11.0+(i%7)*.3,z=.8+((t*.9+i*.37)%7);ctx.strokeStyle='rgba(57,158,190,.55)';ctx.beginPath();ctx.arc(X(x),Y(z),(1.5+i%3)*DPR,0,Math.PI*2);ctx.stroke()}
+ // labels
+ ctx.fillStyle='#174f61';ctx.textAlign='center';ctx.font=`900 ${11*DPR}px sans-serif`;[['沈殿分離',2.7],['嫌気ろ床',7.8],['接触ろ床',12],['処理水',14.2],['消毒',15.8]].forEach(([s,x])=>ctx.fillText(s,X(x),Y(9.5)));ctx.font=`${10*DPR}px sans-serif`;ctx.fillText('WL 水深 880mm',X(3.0),Y(8.8)-6*DPR);ctx.fillText('全高 1220mm',X(16.0),Y(11.4));ctx.restore?.()}
+function drawPlayerSection(){const p=sample(state.p),m=40*DPR,scale=Math.min((W-m*2)/19.5,H*.67/12.2),ox=(W-19.5*scale)/2,base=H*.78,X=x=>ox+x*scale,Y=z=>base-z*scale;ctx.fillStyle='#7a4c2b';ctx.strokeStyle='#fff';ctx.lineWidth=2*DPR;ctx.beginPath();ctx.arc(X(p.x+3),Y(p.z),7*DPR,0,Math.PI*2);ctx.fill();ctx.stroke()}
+
+function render(){if(!state.playing||state.paused)return;if(state.mode==='section')renderSection();else if(state.mode==='plan')renderPlan();else renderFollow()}
+function update(dt){if(!state.playing||state.paused)return;const control=(joyY<-.05?-joyY:0)+(state.auto?.22:0);state.targetSpeed=.000018+control*.000055;state.speed+=(state.targetSpeed-state.speed)*Math.min(1,dt*.006);state.p=Math.min(1,state.p+state.speed*dt);if(state.p>=1){state.auto=false;showNotice('放流まで到達しました');}updateHUD();
+ // camera angle gentle movement in follow mode
+ if(state.mode==='follow'){const p=sample(state.p);state.viewAngle+=((p.angle*.18-.1)-state.viewAngle)*Math.min(1,dt*.0012)} }
+function loop(ts){const dt=Math.min(40,ts-last||16);last=ts;update(dt);render();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+
+function nearestFeature(){const p=sample(state.p);const features=[
+ {id:'baffle',x:1.0,y:5.5,z:4.8},{id:'sed',x:3.2,y:4,z:2},{id:'peak',x:5.8,y:8.8,z:7.6},{id:'ana',x:7.6,y:5,z:3.5},{id:'anaMedia',x:8,y:4,z:4},{id:'diffuser',x:12,y:5.1,z:.8},{id:'contactMedia',x:12,y:4,z:4.5},{id:'airlift',x:14.4,y:4.8,z:5},{id:'chemical',x:15.5,y:3.6,z:7.6}];let best=null,bd=99;features.forEach(f=>{const d=Math.hypot(p.x-f.x,p.y-f.y,(p.z-f.z)*.4);if(d<bd){bd=d;best=f}});return bd<3.3?best:null}
+const featureText={
+ baffle:['流入バッフル','流入管の直後に設置され、水を下方へ導いて短絡流を抑えます。','認定図の左端流入口直後にある実機配置を反映しています。'],
+ sed:['沈殿分離槽','固形物や油脂を重力で分離します。','CB-5有効容量0.290m³。底部には汚泥、水面にはスカムが蓄積します。'],
+ peak:['ピークカット部','流入量が多い時間帯の水を一時的に受け止めます。','CB-5有効容量0.191m³。水位変化により流量変動を緩和します。'],
+ ana:['嫌気ろ床槽','酸素の少ない環境で有機物分解と脱窒が進みます。','CB-5有効容量0.546m³。沈殿分離槽と合わせて一次処理を担います。'],
+ anaMedia:['嫌気ろ材','網様円筒状のろ材が多数充填されています。','PPまたはPE製、平均外径φ74×高さ73mm。微生物の付着面と固形物捕捉の場になります。'],
+ diffuser:['散気管・曝気','底部の散気管から空気が供給され、泡が上昇します。','CB-5専用CBB5ブロワは60L/分。接触ろ床槽の微生物へ酸素を供給します。'],
+ contactMedia:['接触ろ材','網様ロール状のろ材へ好気性微生物が付着します。','PPまたはPE製、φ100×高さ100mm。有機物分解・硝化・SS除去を担います。'],
+ airlift:['循環・放流エアリフト','空気の力で水を持ち上げ、循環または放流工程へ送ります。','処理水槽の水は放流エアリフトで薬剤筒を経て消毒槽へ移送されます。'],
+ chemical:['薬剤筒・消毒槽','塩素剤へ接触させ、処理水を消毒します。','消毒槽有効容量0.011m³。異なる種類の塩素剤を混ぜてはいけません。']
+};
+function inspect(){const f=nearestFeature();if(!f){const z=zoneAt(state.p);openDialog(z.name,z.short,z.detail);return}discover(f.id);const a=featureText[f.id];openDialog(a[0],a[1],a[2])}
+function openDialog(t,b,d){$('#dlgTitle').textContent=t;$('#dlgBody').textContent=b;$('#dlgDetail').textContent=d;$('#dialog').classList.remove('hidden')}
+$('#dialog .close').onclick=()=>$('#dialog').classList.add('hidden');$('#inspectBtn').onclick=inspect;
+
+function start(){state.playing=true;state.paused=false;$('#start').classList.add('hidden');['#hud','#modebar','#caption','#menuBtn','#stick','#inspectBtn','.mobileHint'].forEach(s=>$(s).classList.remove('hidden'));showNotice('流入管からスタート');updateHUD()}
+$('#startBtn').addEventListener('click',start);$('#startBtn').addEventListener('touchend',e=>{e.preventDefault();start()},{passive:false});
+$$('[data-mode]').forEach(b=>b.onclick=()=>{$$('[data-mode]').forEach(x=>x.classList.toggle('on',x===b));state.mode=b.dataset.mode;if(state.mode==='plan')state.viewAngle=0;if(state.mode==='follow')showNotice('汚れ視点の追体験へ戻りました')});
+
+// low-sensitivity joystick: only controls forward flow speed, no maze steering.
+const stick=$('#stick'),knob=$('#knob');let joyId=null;
+function joy(e){const r=stick.getBoundingClientRect(),p=[...e.touches].find(t=>t.identifier===joyId)||e.changedTouches?.[0];if(!p)return;let y=p.clientY-(r.top+r.height/2);const lim=43;y=Math.max(-lim,Math.min(lim,y));const n=y/lim,dead=.22;joyTargetY=Math.abs(n)<dead?0:Math.sign(n)*Math.pow((Math.abs(n)-dead)/(1-dead),2.3)*.52;joyY+=(joyTargetY-joyY)*.45;knob.style.transform=`translate(0,${y}px)`}
+stick.addEventListener('touchstart',e=>{joyId=e.changedTouches[0].identifier;joy(e);e.preventDefault()},{passive:false});stick.addEventListener('touchmove',e=>{joy(e);e.preventDefault()},{passive:false});function joyEnd(){joyY=joyTargetY=0;joyId=null;knob.style.transform='translate(0,0)'}stick.addEventListener('touchend',joyEnd);stick.addEventListener('touchcancel',joyEnd);
+cv.addEventListener('pointerdown',e=>{if(e.clientX<innerWidth*.35&&matchMedia('(pointer:coarse)').matches)return;drag={x:e.clientX};cv.setPointerCapture(e.pointerId)});cv.addEventListener('pointermove',e=>{if(!drag||state.mode==='section')return;state.viewAngle+=(e.clientX-drag.x)*.0022;drag.x=e.clientX});cv.addEventListener('pointerup',()=>drag=null);cv.addEventListener('pointercancel',()=>drag=null);
+addEventListener('keydown',e=>{if(e.key.toLowerCase()==='e')inspect();if(e.key==='ArrowUp'||e.key.toLowerCase()==='w')joyY=-.45;if(e.key==='Escape'&&state.playing)toggleMenu()});addEventListener('keyup',e=>{if(['ArrowUp','w','W'].includes(e.key))joyY=0});
+
+function toggleMenu(tab='mission'){state.paused=!state.paused;$('#menu').classList.toggle('hidden',!state.paused);if(state.paused)renderTab(tab)}$('#menuBtn').onclick=()=>toggleMenu();$('#resume').onclick=()=>toggleMenu();$('#restart').onclick=()=>{localStorage.removeItem('cb5Faithful');location.reload()};
+$$('[data-tab]').forEach(b=>b.onclick=()=>renderTab(b.dataset.tab));$('#structure0').onclick=()=>{$('#start').classList.add('hidden');state.paused=true;$('#menu').classList.remove('hidden');renderTab('structure')};$('#settings0').onclick=()=>{$('#start').classList.add('hidden');state.paused=true;$('#menu').classList.remove('hidden');renderTab('settings')};
+function renderTab(tab){$$('[data-tab]').forEach(x=>x.classList.toggle('on',x.dataset.tab===tab));const c=$('#tab');if(tab==='mission'){c.innerHTML='<h2 class="sectionTitle">構造確認項目</h2>'+checks.map((id,i)=>`<div class="mission ${state.found.has(id)?'done':''}"><span class="check"></span><div><b>${i+1}. ${checkNames[id]}</b><small>${state.found.has(id)?'確認済み':'近くで「調べる」'}</small></div></div>`).join('')}else if(tab==='structure'){c.innerHTML=`<h2 class="sectionTitle">CB-5 実機基準データ</h2><div class="specGrid"><div class="spec"><b>1690 mm</b><small>最大縦幅</small></div><div class="spec"><b>1110 mm</b><small>最大横幅</small></div><div class="spec"><b>1220 mm</b><small>全高</small></div><div class="spec"><b>880 mm</b><small>水深</small></div><div class="spec"><b>1.395 m³</b><small>総容量</small></div><div class="spec"><b>60 L/分</b><small>CBB5ブロワ</small></div></div><h3>各槽有効容量</h3><div class="specGrid"><div class="spec"><b>0.290 m³</b><small>沈殿分離槽</small></div><div class="spec"><b>0.546 m³</b><small>嫌気ろ床槽</small></div><div class="spec"><b>0.191 m³</b><small>ピークカット部</small></div><div class="spec"><b>0.238 m³</b><small>接触ろ床槽</small></div><div class="spec"><b>0.119 m³</b><small>処理水槽</small></div><div class="spec"><b>0.011 m³</b><small>消毒槽</small></div></div><h3>処理工程</h3><p style="line-height:1.8">流入 → 沈殿分離槽 → 嫌気ろ床槽 → 接触ろ床槽 → 処理水槽 → 放流エアリフト → 薬剤筒・消毒槽 → 放流。処理水の一部は循環エアリフトで循環します。</p><div class="legend"><div><span class="sw" style="background:#86d9bc"></span>沈殿分離</div><div><span class="sw" style="background:#77d2a0"></span>嫌気ろ床</div><div><span class="sw" style="background:#64cef0"></span>接触ろ床</div><div><span class="sw" style="background:#c49bef"></span>消毒</div></div><p class="warning">実際の槽内は酸欠・硫化水素など重大な危険があります。ゲームは構造理解のための表示です。</p>`}else{c.innerHTML=`<h2 class="sectionTitle">操作設定</h2><div class="card"><b>自動で流れに乗る</b><small>ONではゆっくり自動進行。スティックを上へ倒すと少し加速します。</small></div><div class="rowBtns"><button class="secondary auto" data-v="1">自動 ON</button><button class="secondary auto" data-v="0">自動 OFF</button></div><div class="card"><b>表示サイズ</b><small>構造を大きく／小さく表示します。</small></div><div class="rowBtns"><button class="secondary zoom" data-v=".85">全体を見る</button><button class="secondary zoom" data-v="1.12">大きく見る</button></div>`;$$('.auto').forEach(b=>b.onclick=()=>{state.auto=b.dataset.v==='1';save();showNotice('自動進行 '+(state.auto?'ON':'OFF'))});$$('.zoom').forEach(b=>b.onclick=()=>{state.zoom=+b.dataset.v;save();showNotice('表示サイズを変更')})}}
+function save(){try{localStorage.setItem('cb5Faithful',JSON.stringify({found:[...state.found],auto:state.auto,zoom:state.zoom}))}catch{}}
+function load(){try{const x=JSON.parse(localStorage.getItem('cb5Faithful'));if(x){state.found=new Set(x.found||[]);state.auto=x.auto!==false;state.zoom=x.zoom||1}}catch{}}load();
+})();
+</script>
+</body>
+</html>
